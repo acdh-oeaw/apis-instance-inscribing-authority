@@ -1,0 +1,21 @@
+[project]
+name = "apis-instance-inscribing-authority"
+version = "0.1.0"
+description = "Inscribing Authority"
+authors = [{ name = "Saranya Balasubramanian" }]
+license = "MIT"
+readme = "README.md"
+requires-python = ">3.11"
+packages = [{include = "apis_ontology"}]
+dependencies = [
+    "apis-core-rdf==0.55.0",
+    "apis-acdhch-default-settings==2.14.0",
+    "psycopg>=3.2.11",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["apis_ontology"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
