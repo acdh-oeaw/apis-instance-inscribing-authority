@@ -5,11 +5,11 @@ description = "Inscribing Authority"
 authors = [{ name = "Saranya Balasubramanian" }]
 license = "MIT"
 readme = "README.md"
-requires-python = ">3.11"
+requires-python = ">=3.13"
 packages = [{include = "apis_ontology"}]
 dependencies = [
-    "apis-core-rdf==0.55.0",
-    "apis-acdhch-default-settings==2.14.0",
+    "apis-core-rdf==0.56.0",
+    "apis-acdhch-default-settings==2.15.0",
     "psycopg>=3.2.11",
 ]
 
