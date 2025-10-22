@@ -10,7 +10,7 @@ packages = [{include = "apis_ontology"}]
 dependencies = [
     "apis-core-rdf==0.56.0",
     "apis-acdhch-default-settings==2.15.0",
-    "psycopg>=3.2.11",
+    "psycopg[binary]>=3.2",
 ]
 
 [tool.hatch.build.targets.wheel]
