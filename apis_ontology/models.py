@@ -131,20 +131,21 @@ class Person(E21_Person, IABaseModel):
         ("female", "Female"),
     ]
 
-    person_title = models.CharField(max_length=255, blank=True, null=True)
+    person_title = models.TextField(blank=True, null=True)
     kunya = models.CharField(max_length=255, blank=True, null=True)
     ism = models.CharField(max_length=255, blank=True, null=True)
     nasab = models.CharField(max_length=255, blank=True, null=True)
     nisba = models.CharField(max_length=255, blank=True, null=True)
-    preferred_name = models.CharField(max_length=255, blank=True, null=True)
-    date_of_birth = FuzzyDateParserField(
-        parser=nomansland_dateparser, null=True, blank=True
-    )
-    date_of_death = FuzzyDateParserField(
-        parser=nomansland_dateparser, null=True, blank=True
-    )
-    person_role = models.ManyToManyField(PersonRole, blank=True)
     relation_to_caliph = models.CharField(max_length=255, blank=True, null=True)
+    preferred_name = models.CharField(max_length=255, blank=True, null=True)
+    active_years_start = FuzzyDateParserField(
+        parser=nomansland_dateparser, null=True, blank=True
+    )
+    active_years_end = FuzzyDateParserField(
+        parser=nomansland_dateparser, null=True, blank=True
+    )
+    dynasty = models.ManyToManyField(Dynasty, blank=True, null=True)
+    person_role = models.ManyToManyField(PersonRole, blank=True)
     forename = None
     surname = None
     gender = models.CharField(max_length=7, choices=GENDERS)
