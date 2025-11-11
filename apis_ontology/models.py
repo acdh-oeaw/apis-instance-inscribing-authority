@@ -3,12 +3,13 @@ from apis_core.apis_entities.abc import (
     E53_Place,
     SimpleLabelModel,
 )
-from apis_core.relations.models import Relation
 from apis_core.apis_entities.models import AbstractEntity
 from apis_core.generic.abc import GenericModel
 from apis_core.history.models import VersionMixin
+from apis_core.relations.models import Relation
 from django.db import models
 from django_interval.fields import FuzzyDateParserField
+
 from .date_utils import nomansland_dateparser
 
 
@@ -117,7 +118,7 @@ class Inscription(IABaseModel):
 
 
 class Place(E53_Place, IABaseModel):
-    pass
+    alternative_names = models.TextField(blank=True, null=True)
 
 
 class Illustration(IABaseModel):
@@ -167,3 +168,16 @@ class Person(E21_Person, IABaseModel):
 class Work(IABaseModel):
     name = models.CharField(max_length=255)
     pass
+
+
+class PlaceLocatedInPlace(Relation):
+    subj_model = Place
+    obj_model = Place
+
+    @classmethod
+    def name(cls) -> str:
+        return "located in"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "contains"
