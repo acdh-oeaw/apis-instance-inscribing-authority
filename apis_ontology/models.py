@@ -68,14 +68,6 @@ class Diacritics(VocabularyBaseModel):
     pass
 
 
-class Ornaments(VocabularyBaseModel):
-    class Meta(VocabularyBaseModel.Meta):
-        verbose_name = "ornaments"
-        verbose_name_plural = "ornaments"
-
-    pass
-
-
 class TextClassification(VocabularyBaseModel):
     """Example:Benedictory text, Commemorative text, Construction text"""
 
@@ -103,18 +95,55 @@ class PreservationState(VocabularyBaseModel):
 
 
 class Monument(IABaseModel):
-
-    pass
+    alternative_names = models.TextField(blank=True, null=True)
+    is_extant = models.BooleanField(default=True)  # type: ignore
+    remarks_on_preservation = models.TextField(blank=True, null=True)
 
 
 class Object(IABaseModel):
-
-    pass
+    object_type = models.CharField(max_length=255, blank=True, null=True)
+    find_spot = models.TextField(blank=True, null=True)
+    material = models.ManyToManyField(Material, blank=True)
+    dimensions_length = models.CharField(
+        max_length=255, blank=True, null=True, help_text="in cm"
+    )
+    dimensions_breadth = models.CharField(
+        max_length=255, blank=True, null=True, help_text="in cm"
+    )
+    dimensions_height = models.CharField(
+        max_length=255, blank=True, null=True, help_text="in cm"
+    )
+    is_extant = models.BooleanField(default=True)  # type: ignore
+    remarks_on_preservation = models.TextField(blank=True, null=True)
 
 
 class Inscription(IABaseModel):
-
-    pass
+    distribution = models.TextField(blank=True, null=True)
+    material = models.ManyToManyField(Material, blank=True)
+    technique = models.ManyToManyField(Technique, blank=True)
+    dimensions_length = models.CharField(
+        max_length=255, blank=True, null=True, help_text="in cm"
+    )
+    dimensions_breadth = models.CharField(
+        max_length=255, blank=True, null=True, help_text="in cm"
+    )
+    dimensions_height = models.CharField(
+        max_length=255, blank=True, null=True, help_text="in cm"
+    )
+    is_extant = models.BooleanField(default=True)  # type: ignore
+    style = models.ManyToManyField(Style, blank=True)
+    diacritics = models.ManyToManyField(Diacritics, blank=True)
+    ornaments = models.TextField(blank=True, null=True)
+    remarks_on_style_and_ornaments = models.TextField(blank=True, null=True)
+    text_classification = models.ManyToManyField(TextClassification, blank=True)
+    language = models.ManyToManyField(Language, blank=True)
+    text_original = models.TextField(blank=True, null=True)
+    text_transliteration = models.TextField(blank=True, null=True)
+    text_translation = models.TextField(blank=True, null=True)
+    remarks = models.TextField(blank=True, null=True)
+    date = FuzzyDateParserField(parser=nomansland_dateparser, null=True, blank=True)
+    remarks_on_date = models.TextField(blank=True, null=True)
+    comparisons = models.TextField(blank=True, null=True)
 
 
 class Place(E53_Place, IABaseModel):
@@ -122,7 +151,7 @@ class Place(E53_Place, IABaseModel):
 
 
 class Illustration(IABaseModel):
-    pass
+    remarks = models.TextField(blank=True, null=True)
 
 
 class Person(E21_Person, IABaseModel):
@@ -181,3 +210,170 @@ class PlaceLocatedInPlace(Relation):
     @classmethod
     def reverse_name(cls) -> str:
         return "contains"
+
+
+class InscriptionQuotesAsSourceWork(Relation):
+    subj_model = Inscription
+    obj_model = Work
+
+    @classmethod
+    def name(cls) -> str:
+        return "quotes as source"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "is quoted as source in"
+
+
+class MonumentLocatedInPlace(Relation):
+    subj_model = Monument
+    obj_model = Place
+
+    @classmethod
+    def name(cls) -> str:
+        return "located in"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "contains"
+
+
+class ObjectPartOfMonument(Relation):
+    subj_model = Object
+    obj_model = Monument
+    position = models.CharField(max_length=255, blank=True, null=True)
+    reference = models.TextField(blank=True, null=True)
+
+    @classmethod
+    def name(cls) -> str:
+        return "part of"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "contains part"
+
+
+class MonumentRepresentedAsIllustration(Relation):
+    subj_model = Monument
+    obj_model = Illustration
+
+    @classmethod
+    def name(cls) -> str:
+        return "represented as"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "representation of"
+
+
+class InscriptionFoundInMonument(Relation):
+    subj_model = Inscription
+    obj_model = Monument
+    position = models.CharField(max_length=255, blank=True, null=True)
+    reference = models.TextField(blank=True, null=True)
+
+    @classmethod
+    def name(cls) -> str:
+        return "found in"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "contains inscription"
+
+
+class InscriptionFoundInObject(Relation):
+    subj_model = Inscription
+    obj_model = Object
+    position = models.CharField(max_length=255, blank=True, null=True)
+
+    @classmethod
+    def name(cls) -> str:
+        return "found in"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "contains inscription"
+
+
+class PersonMentionedInInscription(Relation):
+    subj_model = Person
+    obj_model = Inscription
+    reference = models.TextField(blank=True, null=True)
+
+    @classmethod
+    def name(cls) -> str:
+        return "mentioned in"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "mentions"
+
+
+class MonumentMentionedInInscription(Relation):
+    subj_model = Monument
+    obj_model = Inscription
+    reference = models.TextField(blank=True, null=True)
+
+    @classmethod
+    def name(cls) -> str:
+        return "mentioned in"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "mentions"
+
+
+class ObjectMentionedInInscription(Relation):
+    subj_model = Object
+    obj_model = Inscription
+    reference = models.TextField(blank=True, null=True)
+
+    @classmethod
+    def name(cls) -> str:
+        return "mentioned in"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "mentions"
+
+
+class PersonRelatedToInscription(Relation):
+    subj_model = Person
+    obj_model = Inscription
+    reference = models.TextField(blank=True, null=True)
+
+    @classmethod
+    def name(cls) -> str:
+        return "related to"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "is related to"
+
+
+class MonumentRelatedToInscription(Relation):
+    subj_model = Monument
+    obj_model = Inscription
+    reference = models.TextField(blank=True, null=True)
+
+    @classmethod
+    def name(cls) -> str:
+        return "related to"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "is related to"
+
+
+class ObjectRelatedToInscription(Relation):
+    subj_model = Object
+    obj_model = Inscription
+    reference = models.TextField(blank=True, null=True)
+
+    @classmethod
+    def name(cls) -> str:
+        return "related to"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "is related to"
