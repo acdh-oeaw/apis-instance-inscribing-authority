@@ -12,6 +12,7 @@ dependencies = [
     "apis-acdhch-default-settings==2.15.0",
     "psycopg[binary]>=3.2",
     "django-interval>=0.5.1",
+    "apis-bibsonomy>=0.13.2",
 ]
 
 [tool.hatch.build.targets.wheel]
