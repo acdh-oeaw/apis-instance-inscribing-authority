@@ -74,8 +74,6 @@ class Diacritics(VocabularyBaseModel):
         verbose_name = "diacritics"
         verbose_name_plural = "diacritics"
 
-    pass
-
 
 class TextClassification(VocabularyBaseModel):
     """Example:Benedictory text, Commemorative text, Construction text"""
@@ -91,8 +89,6 @@ class Dynasty(VocabularyBaseModel):
     class Meta(SimpleLabelModel.Meta):
         verbose_name = "dynasty"
         verbose_name_plural = "dynasties"
-
-    pass
 
 
 class PersonRole(VocabularyBaseModel):
@@ -202,10 +198,10 @@ class Person(E21_Person, PersonMixin, IABaseModel):
     gender = models.CharField(max_length=7, choices=GENDERS)
 
     def __str__(self):
+        if self.preferred_name:
+            return self.preferred_name
         parts = [self.person_title, self.ism, self.kunya, self.nasab, self.nisba]
         return " ".join([part for part in parts if part])
-
-    pass
 
     class Meta(E21_Person.Meta, IABaseModel.Meta):
         verbose_name = "person"
@@ -217,7 +213,6 @@ class Person(E21_Person, PersonMixin, IABaseModel):
 
 class Work(IABaseModel):
     name = models.CharField(max_length=255)
-    pass
 
 
 class PlaceLocatedInPlace(Relation):
