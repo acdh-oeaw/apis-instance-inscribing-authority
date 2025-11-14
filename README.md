@@ -2,6 +2,8 @@
 
 [APIS](https://github.com/acdh-oeaw/apis-core-rdf/) instance for the project [Inscribing Authority](https://www.oeaw.ac.at/en/ifi/research/cultural-and-social-history-premodern/inscribing-authority).
 
+Data model: https://inscribing-authority.acdh-dev.oeaw.ac.at/apis/documentation
+
 Funding
 FWF – der Wissenschaftsfonds
 ESPRIT-Project  ESP 512-G
