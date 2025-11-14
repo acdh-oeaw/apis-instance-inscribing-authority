@@ -21,6 +21,15 @@ class IADateMixin(models.Model):
     end = FuzzyDateParserField(parser=nomansland_dateparser, null=True, blank=True)
 
 
+class PersonMixin(models.Model):
+    class Meta:
+        abstract = True
+
+    # can account for the origin [of the Person himself or his ancestors] or the profession;
+    # attribute of relation Person/Place or Person/Monument//Object//Inscription
+    nisba = models.CharField(max_length=255, blank=True, null=True, help_text="Epithet")
+
+
 class VocabularyBaseModel(GenericModel, SimpleLabelModel):
     class Meta(GenericModel.Meta, SimpleLabelModel.Meta):
         abstract = True
@@ -154,20 +163,32 @@ class Illustration(IABaseModel):
     remarks = models.TextField(blank=True, null=True)
 
 
-class Person(E21_Person, IABaseModel):
+class Person(E21_Person, PersonMixin, IABaseModel):
     GENDERS = [
         ("unknown", "unknown"),
         ("male", "Male"),
         ("female", "Female"),
     ]
-
-    person_title = models.TextField(blank=True, null=True)
-    kunya = models.CharField(max_length=255, blank=True, null=True)
-    ism = models.CharField(max_length=255, blank=True, null=True)
-    nasab = models.CharField(max_length=255, blank=True, null=True)
-    nisba = models.CharField(max_length=255, blank=True, null=True)
+    person_title = models.TextField(
+        blank=True, null=True, help_text="one title per line"
+    )
+    kunya = models.CharField(
+        max_length=255, blank=True, null=True, help_text="Teknonym"
+    )
+    ism = models.CharField(max_length=255, blank=True, null=True, help_text="Forename")
+    nasab = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        help_text="Patronymic, can be several, eg. name of father, grandfather, etc.",
+    )
     relation_to_caliph = models.CharField(max_length=255, blank=True, null=True)
-    preferred_name = models.CharField(max_length=255, blank=True, null=True)
+    preferred_name = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        help_text="If not provided, the name will be generated from the name parts.",
+    )
     active_years_start = FuzzyDateParserField(
         parser=nomansland_dateparser, null=True, blank=True
     )
@@ -295,7 +316,7 @@ class InscriptionFoundInObject(Relation):
         return "contains inscription"
 
 
-class PersonMentionedInInscription(Relation):
+class PersonMentionedInInscription(PersonMixin, Relation):
     subj_model = Person
     obj_model = Inscription
     reference = models.TextField(blank=True, null=True)
@@ -337,7 +358,7 @@ class ObjectMentionedInInscription(Relation):
         return "mentions"
 
 
-class PersonRelatedToInscription(Relation):
+class PersonRelatedToInscription(PersonMixin, Relation):
     subj_model = Person
     obj_model = Inscription
     reference = models.TextField(blank=True, null=True)
