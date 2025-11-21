@@ -221,7 +221,7 @@ class PlaceLocatedInPlace(Relation):
 
     @classmethod
     def name(cls) -> str:
-        return "located in"
+        return "place located in"
 
     @classmethod
     def reverse_name(cls) -> str:
@@ -234,11 +234,11 @@ class InscriptionQuotesAsSourceWork(Relation):
 
     @classmethod
     def name(cls) -> str:
-        return "quotes as source"
+        return "quotes"
 
     @classmethod
     def reverse_name(cls) -> str:
-        return "is quoted as source in"
+        return "is quoted in"
 
 
 class MonumentLocatedInPlace(Relation):
@@ -247,7 +247,7 @@ class MonumentLocatedInPlace(Relation):
 
     @classmethod
     def name(cls) -> str:
-        return "located in"
+        return "monument located in"
 
     @classmethod
     def reverse_name(cls) -> str:
@@ -262,7 +262,7 @@ class ObjectPartOfMonument(Relation):
 
     @classmethod
     def name(cls) -> str:
-        return "part of"
+        return "object part of monument"
 
     @classmethod
     def reverse_name(cls) -> str:
@@ -275,7 +275,7 @@ class MonumentRepresentedAsIllustration(Relation):
 
     @classmethod
     def name(cls) -> str:
-        return "represented as"
+        return "monument represented as"
 
     @classmethod
     def reverse_name(cls) -> str:
@@ -290,11 +290,11 @@ class InscriptionFoundInMonument(Relation):
 
     @classmethod
     def name(cls) -> str:
-        return "found in"
+        return "found in monument"
 
     @classmethod
     def reverse_name(cls) -> str:
-        return "contains inscription"
+        return "monument contains inscription"
 
 
 class InscriptionFoundInObject(Relation):
@@ -304,11 +304,11 @@ class InscriptionFoundInObject(Relation):
 
     @classmethod
     def name(cls) -> str:
-        return "found in"
+        return "found in object"
 
     @classmethod
     def reverse_name(cls) -> str:
-        return "contains inscription"
+        return "object contains"
 
 
 class PersonMentionedInInscription(PersonMixin, Relation):
@@ -318,7 +318,7 @@ class PersonMentionedInInscription(PersonMixin, Relation):
 
     @classmethod
     def name(cls) -> str:
-        return "mentioned in"
+        return "person mentioned in"
 
     @classmethod
     def reverse_name(cls) -> str:
@@ -332,7 +332,7 @@ class MonumentMentionedInInscription(Relation):
 
     @classmethod
     def name(cls) -> str:
-        return "mentioned in"
+        return "monument mentioned in"
 
     @classmethod
     def reverse_name(cls) -> str:
@@ -346,7 +346,7 @@ class ObjectMentionedInInscription(Relation):
 
     @classmethod
     def name(cls) -> str:
-        return "mentioned in"
+        return "object mentioned in"
 
     @classmethod
     def reverse_name(cls) -> str:
@@ -360,7 +360,7 @@ class PersonRelatedToInscription(PersonMixin, Relation):
 
     @classmethod
     def name(cls) -> str:
-        return "related to"
+        return "person related to"
 
     @classmethod
     def reverse_name(cls) -> str:
@@ -374,7 +374,7 @@ class MonumentRelatedToInscription(Relation):
 
     @classmethod
     def name(cls) -> str:
-        return "related to"
+        return "monument related to"
 
     @classmethod
     def reverse_name(cls) -> str:
@@ -388,8 +388,47 @@ class ObjectRelatedToInscription(Relation):
 
     @classmethod
     def name(cls) -> str:
-        return "related to"
+        return "object related to"
 
     @classmethod
     def reverse_name(cls) -> str:
         return "is related to"
+
+
+class ObjectRepresentedAsIllustration(Relation):
+    subj_model = Object
+    obj_model = Illustration
+
+    @classmethod
+    def name(cls) -> str:
+        return "object represented as"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "representation of"
+
+
+class ObjectFoundInplace(Relation):
+    subj_model = Object
+    obj_model = Place
+
+    @classmethod
+    def name(cls) -> str:
+        return "object found in"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "contains object"
+
+
+class InscriptionRepresentedAsIllustration(Relation):
+    subj_model = Inscription
+    obj_model = Illustration
+
+    @classmethod
+    def name(cls) -> str:
+        return "inscription represented as"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "representation of"
