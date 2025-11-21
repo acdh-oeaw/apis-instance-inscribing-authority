@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block styles %}
+<link href="{% static 'styles/inscribing.css' %}" rel="stylesheet" />
+{{ block.super }}
+{% endblock styles %}
+{% block title %}
+{% if object %}
+{{ object }}
+{% else %}
+Inscribing Authority
+{% endif %}
+{% endblock title %}
