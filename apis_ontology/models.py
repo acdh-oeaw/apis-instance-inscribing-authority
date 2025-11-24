@@ -100,6 +100,7 @@ class PreservationState(VocabularyBaseModel):
 
 
 class Monument(IABaseModel):
+    name = models.CharField(max_length=255, blank=True, null=True)
     alternative_names = models.TextField(blank=True, null=True)
     is_extant = models.BooleanField(default=True)  # type: ignore
     remarks_on_preservation = models.TextField(blank=True, null=True)
