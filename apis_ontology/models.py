@@ -101,6 +101,7 @@ class PreservationState(VocabularyBaseModel):
 
 class Monument(IABaseModel):
     name = models.CharField(max_length=255, blank=True, null=True)
+    monument_type = models.ManyToManyField(MonumentType, blank=True)
     alternative_names = models.TextField(blank=True, null=True)
     is_extant = models.BooleanField(default=True)  # type: ignore
     remarks_on_preservation = models.TextField(blank=True, null=True)
@@ -109,6 +110,7 @@ class Monument(IABaseModel):
 class Object(IABaseModel):
     object_type = models.CharField(max_length=255, blank=True, null=True)
     find_spot = models.TextField(blank=True, null=True)
+    current_position = models.TextField(blank=True, null=True)
     material = models.ManyToManyField(Material, blank=True)
     dimensions_length = models.CharField(
         max_length=255, blank=True, null=True, help_text="in cm"
