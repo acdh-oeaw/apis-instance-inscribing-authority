@@ -19,6 +19,6 @@ APIS_BIBSONOMY = [
         "url": "https://api.zotero.org",
         "user": os.environ.get("APIS_BIBSONOMY_USER"),
         "API key": os.environ.get("APIS_BIBSONOMY_PASSWORD"),
-        "group": "6307386",
+        "group": "6319038",
     }
 ]
