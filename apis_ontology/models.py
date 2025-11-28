@@ -193,9 +193,11 @@ class Person(E21_Person, PersonMixin, IABaseModel):
     active_years_start = FuzzyDateParserField(
         parser=nomansland_dateparser, null=True, blank=True
     )
+    date_of_birth = None
     active_years_end = FuzzyDateParserField(
         parser=nomansland_dateparser, null=True, blank=True
     )
+    date_of_death = None
     dynasty = models.ManyToManyField(Dynasty, blank=True, null=True)
     person_role = models.ManyToManyField(PersonRole, blank=True)
     forename = None
