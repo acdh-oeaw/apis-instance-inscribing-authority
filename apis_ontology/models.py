@@ -219,6 +219,9 @@ class Person(E21_Person, PersonMixin, IABaseModel):
 class Work(IABaseModel):
     name = models.CharField(max_length=255)
 
+    def __str__(self):
+        return self.name
+
 
 class PlaceLocatedInPlace(Relation):
     subj_model = Place
