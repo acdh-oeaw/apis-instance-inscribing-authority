@@ -106,6 +106,8 @@ class Monument(IABaseModel):
     is_extant = models.BooleanField(default=True)  # type: ignore
     remarks_on_preservation = models.TextField(blank=True, null=True)
 
+    def __str__(self):
+        return self.name if self.name else super().__str__()
 
 class Object(IABaseModel):
     object_type = models.CharField(max_length=255, blank=True, null=True)
