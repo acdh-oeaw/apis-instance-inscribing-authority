@@ -8,11 +8,12 @@ readme = "README.md"
 requires-python = ">=3.13"
 packages = [{include = "apis_ontology"}]
 dependencies = [
-    "apis-core-rdf==0.56.4",
+    "apis-core-rdf==0.58.2",
     "apis-acdhch-default-settings==2.15.0",
     "psycopg[binary]>=3.2",
     "django-interval>=0.5.1",
     "apis-bibsonomy>=0.13.2",
+    "apis-highlighter-ng>=0.6.3",
 ]
 
 [tool.hatch.build.targets.wheel]

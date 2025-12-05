@@ -88,7 +88,7 @@ wheels = [
 
 [[package]]
 name = "apis-core-rdf"
-version = "0.56.4"
+version = "0.58.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "acdh-arche-assets" },
@@ -108,9 +108,22 @@ dependencies = [
     { name = "rdflib" },
     { name = "tablib" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/1c/ce/173af30c11d6041fd52955f078b763f1a0da3223d3bdc0afc7be4015c5ec/apis_core_rdf-0.56.4.tar.gz", hash = "sha256:ae3e594199514e1636cc8c9b191a66b601f1305b925b63c69c76c5c891e0423e", size = 301543, upload-time = "2025-10-29T14:09:19.298Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/2b/cc/2454d2f3b43c591616e6828c9c386bf5568bdd7a067368635c17a4ff1080/apis_core_rdf-0.58.2.tar.gz", hash = "sha256:673c0e3b29e87e8184b07556d1c7f70a46bd08fca0f05adc94499b9cd4fc6e8a", size = 304000, upload-time = "2025-12-04T11:33:39.868Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/60/18/eda9053c6a7f86016ffb07e644424348cd70ca296d4ab4436e2ba297473f/apis_core_rdf-0.56.4-py3-none-any.whl", hash = "sha256:663e4b681822a7082128d22f9781da08f2b3199747d9ec529875ee1729e7df45", size = 288065, upload-time = "2025-10-29T14:09:17.151Z" },
+    { url = "https://files.pythonhosted.org/packages/c2/c8/978dbcf226915f3c5cdd70b1a8b96d9d7390ee3a9ef27f115ecc06baefa9/apis_core_rdf-0.58.2-py3-none-any.whl", hash = "sha256:6873d1bb4276b735400ba6aa008b805326e86b58bad09685af6f43f08e7c87e2", size = 292390, upload-time = "2025-12-04T11:33:38.702Z" },
+]
+
+[[package]]
+name = "apis-highlighter-ng"
+version = "0.6.3"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "apis-core-rdf" },
+    { name = "django" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/b8/3d/d36a165748b75b44eea388413cfdf9fd988f8ee9dbf58486bc153d877440/apis_highlighter_ng-0.6.3.tar.gz", hash = "sha256:fe627717f0338c4fc53a6e55116e440a6dc5b76c4a6fd7d23b3d7d8c6219080e", size = 14216, upload-time = "2025-09-08T08:44:57.709Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/12/3f/074826179d6dfc2a74e83de92ed67a0d6d2f04a55339384f32c2d0287650/apis_highlighter_ng-0.6.3-py3-none-any.whl", hash = "sha256:c20b77bcad6ea92a6c7514d8d840b013c8b10bc19195a0ee2ebd2a6b8d05ef5c", size = 15773, upload-time = "2025-09-08T08:44:55.691Z" },
 ]
 
 [[package]]
@@ -121,6 +134,7 @@ dependencies = [
     { name = "apis-acdhch-default-settings" },
     { name = "apis-bibsonomy" },
     { name = "apis-core-rdf" },
+    { name = "apis-highlighter-ng" },
     { name = "django-interval" },
     { name = "psycopg", extra = ["binary"] },
 ]
@@ -129,7 +143,8 @@ dependencies = [
 requires-dist = [
     { name = "apis-acdhch-default-settings", specifier = "==2.15.0" },
     { name = "apis-bibsonomy", specifier = ">=0.13.2" },
-    { name = "apis-core-rdf", specifier = "==0.56.4" },
+    { name = "apis-core-rdf", specifier = "==0.58.2" },
+    { name = "apis-highlighter-ng", specifier = ">=0.6.3" },
     { name = "django-interval", specifier = ">=0.5.1" },
     { name = "psycopg", extras = ["binary"], specifier = ">=3.2" },
 ]
