@@ -228,7 +228,14 @@ class Work(IABaseModel):
         return self.name
 
 
-class PlaceLocatedInPlace(Relation):
+class IARelationMixin(Relation, models.Model):
+    class Meta:
+        abstract = True
+
+    remarks = models.TextField(blank=True, null=True)
+
+
+class PlaceLocatedInPlace(IARelationMixin):
     subj_model = Place
     obj_model = Place
 
@@ -254,7 +261,7 @@ class InscriptionQuotesAsSourceWork(Relation):
         return "is quoted in"
 
 
-class MonumentLocatedInPlace(Relation):
+class MonumentLocatedInPlace(IARelationMixin):
     subj_model = Monument
     obj_model = Place
 
@@ -267,7 +274,7 @@ class MonumentLocatedInPlace(Relation):
         return "contains"
 
 
-class ObjectPartOfMonument(Relation):
+class ObjectPartOfMonument(IARelationMixin):
     subj_model = Object
     obj_model = Monument
     position = models.CharField(max_length=255, blank=True, null=True)
@@ -282,7 +289,7 @@ class ObjectPartOfMonument(Relation):
         return "contains part"
 
 
-class MonumentRepresentedAsIllustration(Relation):
+class MonumentRepresentedAsIllustration(IARelationMixin):
     subj_model = Monument
     obj_model = Illustration
 
@@ -295,7 +302,7 @@ class MonumentRepresentedAsIllustration(Relation):
         return "representation of"
 
 
-class InscriptionFoundInMonument(Relation):
+class InscriptionFoundInMonument(IARelationMixin):
     subj_model = Inscription
     obj_model = Monument
     position = models.CharField(max_length=255, blank=True, null=True)
@@ -310,7 +317,7 @@ class InscriptionFoundInMonument(Relation):
         return "monument contains inscription"
 
 
-class InscriptionFoundInObject(Relation):
+class InscriptionFoundInObject(IARelationMixin):
     subj_model = Inscription
     obj_model = Object
     position = models.CharField(max_length=255, blank=True, null=True)
@@ -338,7 +345,7 @@ class PersonMentionedInInscription(PersonMixin, Relation):
         return "mentions"
 
 
-class MonumentMentionedInInscription(Relation):
+class MonumentMentionedInInscription(IARelationMixin):
     subj_model = Monument
     obj_model = Inscription
     reference = models.TextField(blank=True, null=True)
@@ -352,7 +359,7 @@ class MonumentMentionedInInscription(Relation):
         return "mentions"
 
 
-class ObjectMentionedInInscription(Relation):
+class ObjectMentionedInInscription(IARelationMixin):
     subj_model = Object
     obj_model = Inscription
     reference = models.TextField(blank=True, null=True)
@@ -380,7 +387,7 @@ class PersonRelatedToInscription(PersonMixin, Relation):
         return "is related to"
 
 
-class MonumentRelatedToInscription(Relation):
+class MonumentRelatedToInscription(IARelationMixin):
     subj_model = Monument
     obj_model = Inscription
     reference = models.TextField(blank=True, null=True)
@@ -394,7 +401,7 @@ class MonumentRelatedToInscription(Relation):
         return "is related to"
 
 
-class ObjectRelatedToInscription(Relation):
+class ObjectRelatedToInscription(IARelationMixin):
     subj_model = Object
     obj_model = Inscription
     reference = models.TextField(blank=True, null=True)
@@ -408,7 +415,7 @@ class ObjectRelatedToInscription(Relation):
         return "is related to"
 
 
-class ObjectRepresentedAsIllustration(Relation):
+class ObjectRepresentedAsIllustration(IARelationMixin):
     subj_model = Object
     obj_model = Illustration
 
@@ -421,7 +428,7 @@ class ObjectRepresentedAsIllustration(Relation):
         return "representation of"
 
 
-class ObjectFoundInplace(Relation):
+class ObjectFoundInplace(IARelationMixin):
     subj_model = Object
     obj_model = Place
 
@@ -434,7 +441,7 @@ class ObjectFoundInplace(Relation):
         return "contains object"
 
 
-class InscriptionRepresentedAsIllustration(Relation):
+class InscriptionRepresentedAsIllustration(IARelationMixin):
     subj_model = Inscription
     obj_model = Illustration
 
