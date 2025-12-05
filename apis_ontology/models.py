@@ -11,6 +11,7 @@ from django.db import models
 from django_interval.fields import FuzzyDateParserField
 
 from .date_utils import nomansland_dateparser
+from auditlog.registry import auditlog
 
 
 class IADateMixin(models.Model):
@@ -95,21 +96,24 @@ class PersonRole(VocabularyBaseModel):
     pass
 
 
-class PreservationState(VocabularyBaseModel):
-    pass
+class PreservationStateMixin(models.Model):
+    class Meta:
+        abstract = True
+
+    remarks_on_preservation = models.TextField(blank=True, null=True)
 
 
-class Monument(IABaseModel):
+class Monument(IABaseModel, PreservationStateMixin):
     name = models.CharField(max_length=255, blank=True, null=True)
     monument_type = models.ManyToManyField(MonumentType, blank=True)
     alternative_names = models.TextField(blank=True, null=True)
     is_extant = models.BooleanField(default=True)  # type: ignore
-    remarks_on_preservation = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return self.name if self.name else super().__str__()
 
-class Object(IABaseModel):
+
+class Object(IABaseModel, PreservationStateMixin):
     object_type = models.CharField(max_length=255, blank=True, null=True)
     find_spot = models.TextField(blank=True, null=True)
     current_position = models.TextField(blank=True, null=True)
@@ -124,7 +128,6 @@ class Object(IABaseModel):
         max_length=255, blank=True, null=True, help_text="in cm"
     )
     is_extant = models.BooleanField(default=True)  # type: ignore
-    remarks_on_preservation = models.TextField(blank=True, null=True)
 
 
 class Inscription(IABaseModel):
@@ -442,3 +445,38 @@ class InscriptionRepresentedAsIllustration(Relation):
     @classmethod
     def reverse_name(cls) -> str:
         return "representation of"
+
+
+auditlog.register(MonumentType)
+auditlog.register(Material)
+auditlog.register(ObjectType)
+auditlog.register(Style)
+auditlog.register(Technique)
+auditlog.register(Diacritics)
+auditlog.register(TextClassification)
+auditlog.register(Language)
+auditlog.register(Dynasty)
+auditlog.register(PersonRole)
+auditlog.register(Monument)
+auditlog.register(Object)
+auditlog.register(Inscription)
+auditlog.register(Place)
+auditlog.register(Illustration)
+auditlog.register(Person)
+auditlog.register(Work)
+auditlog.register(PlaceLocatedInPlace)
+auditlog.register(InscriptionQuotesAsSourceWork)
+auditlog.register(MonumentLocatedInPlace)
+auditlog.register(ObjectPartOfMonument)
+auditlog.register(MonumentRepresentedAsIllustration)
+auditlog.register(InscriptionFoundInMonument)
+auditlog.register(InscriptionFoundInObject)
+auditlog.register(PersonMentionedInInscription)
+auditlog.register(MonumentMentionedInInscription)
+auditlog.register(ObjectMentionedInInscription)
+auditlog.register(PersonRelatedToInscription)
+auditlog.register(MonumentRelatedToInscription)
+auditlog.register(ObjectRelatedToInscription)
+auditlog.register(ObjectRepresentedAsIllustration)
+auditlog.register(ObjectFoundInplace)
+auditlog.register(InscriptionRepresentedAsIllustration)
