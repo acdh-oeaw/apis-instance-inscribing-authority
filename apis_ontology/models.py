@@ -12,6 +12,7 @@ from django_interval.fields import FuzzyDateParserField
 
 from .date_utils import nomansland_dateparser
 from auditlog.registry import auditlog
+from django.utils.functional import cached_property
 
 
 class IADateMixin(models.Model):
@@ -109,8 +110,18 @@ class Monument(IABaseModel, PreservationStateMixin):
     alternative_names = models.TextField(blank=True, null=True)
     is_extant = models.BooleanField(default=True)  # type: ignore
 
+    @cached_property
+    def location(self):
+        return Place.objects.filter(
+            pk__in=MonumentLocatedInPlace.objects.filter(
+                subj_object_id=self.pk
+            ).values_list("obj_object_id", flat=True)
+        )
+
     def __str__(self):
-        return self.name if self.name else super().__str__()
+        if self.location.exists():
+            return f"{self.name} ({self.location.first()})"
+        return self.name
 
 
 class Object(IABaseModel, PreservationStateMixin):
@@ -128,6 +139,20 @@ class Object(IABaseModel, PreservationStateMixin):
         max_length=255, blank=True, null=True, help_text="in cm"
     )
     is_extant = models.BooleanField(default=True)  # type: ignore
+
+    @cached_property
+    def monument(self):
+        return Monument.objects.filter(
+            pk__in=ObjectPartOfMonument.objects.filter(
+                subj_object_id=self.pk
+            ).values_list("obj_object_id", flat=True)
+        )
+
+    def __str__(self):
+        prefix = f"{self.object_type} | " if self.object_type else ""
+        if self.monument.exists():
+            return f"{prefix}{self.monument.first()}".strip()
+        return f"{prefix}{super().__str__()}"
 
 
 class Inscription(IABaseModel):
@@ -158,6 +183,19 @@ class Inscription(IABaseModel):
     remarks_on_date = models.TextField(blank=True, null=True)
     comparisons = models.TextField(blank=True, null=True)
 
+    @cached_property
+    def object(self):
+        return Object.objects.filter(
+            pk__in=InscriptionFoundInObject.objects.filter(
+                subj_object_id=self.pk
+            ).values_list("obj_object_id", flat=True)
+        )
+
+    def __str__(self):
+        if self.object.exists():
+            return f"{self.object.first()}"
+        return super().__str__()
+
 
 class Place(E53_Place, IABaseModel):
     alternative_names = models.TextField(blank=True, null=True)
@@ -165,6 +203,30 @@ class Place(E53_Place, IABaseModel):
 
 class Illustration(IABaseModel):
     remarks = models.TextField(blank=True, null=True)
+
+    @cached_property
+    def inscription(self):
+        return Inscription.objects.filter(
+            pk__in=InscriptionRepresentedAsIllustration.objects.filter(
+                obj_object_id=self.pk
+            ).values_list("subj_object_id", flat=True)
+        )
+
+    @cached_property
+    def monument(self):
+        return Monument.objects.filter(
+            pk__in=MonumentRepresentedAsIllustration.objects.filter(
+                obj_object_id=self.pk
+            ).values_list("subj_object_id", flat=True)
+        )
+
+    def __str__(self) -> str:
+        if self.inscription.exists():
+            return f"{self.inscription.first()}"
+        if self.monument.exists():
+            return f"{self.monument.first()}"
+
+        return super().__str__()
 
 
 class Person(E21_Person, PersonMixin, IABaseModel):
