@@ -166,6 +166,7 @@ class Object(IABaseModel, PreservationStateMixin):
 
 
 class Inscription(IABaseModel,PreservationStateMixin):
+    reference_tei = models.CharField(max_length=255, blank=True, null=True, help_text="reference to https://www.epigraphie-islamique.uliege.be/")
     distribution = models.TextField(blank=True, null=True)
     material = models.ManyToManyField(Material, blank=True)
     technique = models.ManyToManyField(Technique, blank=True)
