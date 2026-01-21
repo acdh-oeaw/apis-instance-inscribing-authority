@@ -100,7 +100,19 @@ class PersonRole(VocabularyBaseModel):
 class PreservationStateMixin(models.Model):
     class Meta:
         abstract = True
-
+    # must be one of multiple states
+    PRESERVATION_STATE_CHOICES = [
+        ("Excellent", "Excellent"),
+        ("Good", "Good"),
+        ("Medium", "Medium"),
+        ("Fragmentary", "Fragmentary"),
+        ("Poor", "Poor"),
+        ("Restored", "Restored"),
+        ("Not extant", "Not extant"),
+    ]
+    preservation_state = models.CharField(
+        max_length=20, choices=PRESERVATION_STATE_CHOICES, blank=True, null=True
+    )
     remarks_on_preservation = models.TextField(blank=True, null=True)
 
 
@@ -155,7 +167,7 @@ class Object(IABaseModel, PreservationStateMixin):
         return f"{prefix}{super().__str__()}"
 
 
-class Inscription(IABaseModel):
+class Inscription(IABaseModel,PreservationStateMixin):
     distribution = models.TextField(blank=True, null=True)
     material = models.ManyToManyField(Material, blank=True)
     technique = models.ManyToManyField(Technique, blank=True)
