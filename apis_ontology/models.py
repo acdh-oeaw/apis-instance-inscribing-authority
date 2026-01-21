@@ -120,7 +120,6 @@ class Monument(IABaseModel, PreservationStateMixin):
     name = models.CharField(max_length=255, blank=True, null=True)
     monument_type = models.ManyToManyField(MonumentType, blank=True)
     alternative_names = models.TextField(blank=True, null=True)
-    is_extant = models.BooleanField(default=True)  # type: ignore
 
     @cached_property
     def location(self):
@@ -150,7 +149,6 @@ class Object(IABaseModel, PreservationStateMixin):
     dimensions_height = models.CharField(
         max_length=255, blank=True, null=True, help_text="in cm"
     )
-    is_extant = models.BooleanField(default=True)  # type: ignore
 
     @cached_property
     def monument(self):
@@ -180,7 +178,6 @@ class Inscription(IABaseModel,PreservationStateMixin):
     dimensions_height = models.CharField(
         max_length=255, blank=True, null=True, help_text="in cm"
     )
-    is_extant = models.BooleanField(default=True)  # type: ignore
     style = models.ManyToManyField(Style, blank=True)
     diacritics = models.ManyToManyField(Diacritics, blank=True)
     ornaments = models.TextField(blank=True, null=True)
