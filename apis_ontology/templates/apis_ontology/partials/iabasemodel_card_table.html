@@ -1,0 +1,17 @@
+{% load generic %}
+{% load references %}
+<table class="table table-hover">
+    {% modeldict object as d %}
+    {% for key, value in d.items %}
+    {% model_field_template_lookup_list object key "table_row" as template_list %}
+    {% include template_list %}
+    {% endfor %}
+</table>
+<div id="referenceon{{ object.content_type.id }}_{{ object.pk }}dlg">
+    References:
+<ul>
+  {% for ref in object.content_type.id|get_references:object.pk %}
+    <li>{{ ref }}</li>
+    {% endfor %}
+    </ul>
+</div>
