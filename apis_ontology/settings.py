@@ -4,7 +4,9 @@ DEBUG = True
 
 ROOT_URLCONF = "apis_ontology.urls"
 ADDITIONAL_APPS = [
+    "apis_highlighter",
     "django_interval",
+    "apis_core.uris",
     "apis_core.documentation",
     "apis_bibsonomy",
 ]
