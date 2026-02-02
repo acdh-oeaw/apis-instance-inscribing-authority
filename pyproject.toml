@@ -14,7 +14,7 @@ dependencies = [
     "django-interval>=0.5.1",
     "apis-bibsonomy>=0.13.2",
     "apis-highlighter-ng>=0.6.3",
-    "gunicorn==23.0.0",
+    "gunicorn==25.0.1",
 ]
 
 [tool.hatch.build.targets.wheel]
