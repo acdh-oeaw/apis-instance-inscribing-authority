@@ -23,15 +23,6 @@ class IADateMixin(models.Model):
     end = FuzzyDateParserField(parser=nomansland_dateparser, null=True, blank=True)
 
 
-class PersonMixin(models.Model):
-    class Meta:
-        abstract = True
-
-    # can account for the origin [of the Person himself or his ancestors] or the profession;
-    # attribute of relation Person/Place or Person/Monument//Object//Inscription
-    nisba = models.CharField(max_length=255, blank=True, null=True, help_text="Epithet")
-
-
 class VocabularyBaseModel(GenericModel, SimpleLabelModel):
     class Meta(GenericModel.Meta, SimpleLabelModel.Meta):
         abstract = True
@@ -40,6 +31,41 @@ class VocabularyBaseModel(GenericModel, SimpleLabelModel):
 class IABaseModel(VersionMixin, AbstractEntity):
     class Meta(VersionMixin.Meta, AbstractEntity.Meta):
         abstract = True
+
+
+class Dynasty(VocabularyBaseModel):
+    class Meta(SimpleLabelModel.Meta):
+        verbose_name = "dynasty"
+        verbose_name_plural = "dynasties"
+
+
+class PersonRole(VocabularyBaseModel):
+    pass
+
+
+class PersonMixin(models.Model):
+    class Meta:
+        abstract = True
+
+    # can account for the origin [of the Person himself or his ancestors] or the profession;
+    # attribute of relation Person/Place or Person/Monument//Object//Inscription
+    person_title = models.TextField(
+        blank=True, null=True, help_text="one title per line"
+    )
+    kunya = models.CharField(
+        max_length=255, blank=True, null=True, help_text="Teknonym"
+    )
+    ism = models.CharField(max_length=255, blank=True, null=True, help_text="Forename")
+    nasab = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        help_text="Patronymic, can be several, eg. name of father, grandfather, etc.",
+    )
+    nisba = models.CharField(max_length=255, blank=True, null=True, help_text="Epithet")
+    relation_to_caliph = models.CharField(max_length=255, blank=True, null=True)
+    dynasty = models.ManyToManyField(Dynasty, blank=True)
+    person_role = models.ManyToManyField(PersonRole, blank=True)
 
 
 class RelationBaseModel(Relation):
@@ -87,19 +113,10 @@ class Language(VocabularyBaseModel):
     pass
 
 
-class Dynasty(VocabularyBaseModel):
-    class Meta(SimpleLabelModel.Meta):
-        verbose_name = "dynasty"
-        verbose_name_plural = "dynasties"
-
-
-class PersonRole(VocabularyBaseModel):
-    pass
-
-
 class PreservationStateMixin(models.Model):
     class Meta:
         abstract = True
+
     # must be one of multiple states
     PRESERVATION_STATE_CHOICES = [
         ("Excellent", "Excellent"),
@@ -165,8 +182,13 @@ class Object(IABaseModel, PreservationStateMixin):
         return f"{prefix}{super().__str__()}"
 
 
-class Inscription(IABaseModel,PreservationStateMixin):
-    reference_tei = models.CharField(max_length=255, blank=True, null=True, verbose_name="Thesaurus d'Epigraphie Islamique ID")
+class Inscription(IABaseModel, PreservationStateMixin):
+    reference_tei = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name="Thesaurus d'Epigraphie Islamique ID",
+    )
     distribution = models.TextField(blank=True, null=True)
     material = models.ManyToManyField(Material, blank=True)
     technique = models.ManyToManyField(Technique, blank=True)
@@ -245,20 +267,6 @@ class Person(E21_Person, PersonMixin, IABaseModel):
         ("male", "Male"),
         ("female", "Female"),
     ]
-    person_title = models.TextField(
-        blank=True, null=True, help_text="one title per line"
-    )
-    kunya = models.CharField(
-        max_length=255, blank=True, null=True, help_text="Teknonym"
-    )
-    ism = models.CharField(max_length=255, blank=True, null=True, help_text="Forename")
-    nasab = models.CharField(
-        max_length=255,
-        blank=True,
-        null=True,
-        help_text="Patronymic, can be several, eg. name of father, grandfather, etc.",
-    )
-    relation_to_caliph = models.CharField(max_length=255, blank=True, null=True)
     preferred_name = models.CharField(
         max_length=255,
         blank=True,
@@ -273,8 +281,6 @@ class Person(E21_Person, PersonMixin, IABaseModel):
         parser=nomansland_dateparser, null=True, blank=True
     )
     date_of_death = None
-    dynasty = models.ManyToManyField(Dynasty, blank=True, null=True)
-    person_role = models.ManyToManyField(PersonRole, blank=True)
     forename = None
     surname = None
     gender = models.CharField(max_length=7, choices=GENDERS)
