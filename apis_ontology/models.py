@@ -1,3 +1,5 @@
+import logging
+
 from apis_core.apis_entities.abc import (
     E21_Person,
     E53_Place,
@@ -13,6 +15,9 @@ from django_interval.fields import FuzzyDateParserField
 from .date_utils import nomansland_dateparser
 from auditlog.registry import auditlog
 from django.utils.functional import cached_property
+
+
+logger = logging.getLogger(__name__)
 
 
 class IADateMixin(models.Model):
@@ -147,8 +152,11 @@ class Monument(IABaseModel, PreservationStateMixin):
         )
 
     def __str__(self):
-        if self.location.exists():
+        try:
             return f"{self.name} ({self.location.first()})"
+        except Exception as e:
+            logger.warning(f"Error in Monument __str__: {e}")
+
         return self.name
 
 
