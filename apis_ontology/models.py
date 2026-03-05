@@ -73,11 +73,6 @@ class PersonMixin(models.Model):
     person_role = models.ManyToManyField(PersonRole, blank=True)
 
 
-class RelationBaseModel(Relation):
-    class Meta(Relation.Meta):
-        abstract = True
-
-
 class MonumentType(VocabularyBaseModel):
     pass
 
@@ -334,7 +329,7 @@ class PlaceLocatedInPlace(IARelationMixin):
         return "contains"
 
 
-class InscriptionQuotesAsSourceWork(Relation):
+class InscriptionQuotesAsSourceWork(IARelationMixin):
     subj_model = Inscription
     obj_model = Work
 
@@ -417,7 +412,7 @@ class InscriptionFoundInObject(IARelationMixin):
         return "object contains"
 
 
-class PersonMentionedInInscription(PersonMixin, Relation):
+class PersonMentionedInInscription(PersonMixin, IARelationMixin):
     subj_model = Person
     obj_model = Inscription
     reference = models.TextField(blank=True, null=True)
@@ -459,7 +454,7 @@ class ObjectMentionedInInscription(IARelationMixin):
         return "mentions"
 
 
-class PersonRelatedToInscription(PersonMixin, Relation):
+class PersonRelatedToInscription(PersonMixin, IARelationMixin):
     subj_model = Person
     obj_model = Inscription
     reference = models.TextField(blank=True, null=True)
@@ -616,6 +611,71 @@ class PersonIdenticalToPerson(IARelationMixin):
     @classmethod
     def reverse_name(cls) -> str:
         return "identical to"
+
+
+class PersonRelatedToObject(PersonMixin, IARelationMixin):
+    subj_model = Person
+    obj_model = Object
+
+    @classmethod
+    def name(cls) -> str:
+        return "person related to object"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "object related to person"
+
+
+class PersonRelatedToMonument(PersonMixin, IARelationMixin):
+    subj_model = Person
+    obj_model = Monument
+
+    @classmethod
+    def name(cls) -> str:
+        return "person related to monument"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "monument related to person"
+
+
+class PersonMakerOfInscription(PersonMixin, IARelationMixin):
+    subj_model = Person
+    obj_model = Inscription
+
+    @classmethod
+    def name(cls) -> str:
+        return "person maker of inscription"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "inscription made by person"
+
+
+class PersonMakerOfMonument(PersonMixin, IARelationMixin):
+    subj_model = Person
+    obj_model = Monument
+
+    @classmethod
+    def name(cls) -> str:
+        return "person maker of monument"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "monument made by person"
+
+
+class PersonMakerOfObject(PersonMixin, IARelationMixin):
+    subj_model = Person
+    obj_model = Object
+
+    @classmethod
+    def name(cls) -> str:
+        return "person maker of object"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "object made by person"
 
 
 auditlog.register(MonumentType)
