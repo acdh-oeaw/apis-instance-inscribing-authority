@@ -540,6 +540,84 @@ class InscriptionRepresentedAsIllustration(IARelationMixin):
         return "representation of"
 
 
+class PersonParentOfPerson(IARelationMixin):
+    subj_model = Person
+    obj_model = Person
+
+    @classmethod
+    def name(cls) -> str:
+        return "parent of"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "child of"
+
+
+class PersonSiblingOfPerson(IARelationMixin):
+    subj_model = Person
+    obj_model = Person
+
+    @classmethod
+    def name(cls) -> str:
+        return "sibling of"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "sibling of"
+
+
+class PersonHusbandOfPerson(IARelationMixin):
+    subj_model = Person
+    obj_model = Person
+
+    @classmethod
+    def name(cls) -> str:
+        return "husband of"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "wife of"
+
+
+class PersonGrandparentOfPerson(IARelationMixin):
+    subj_model = Person
+    obj_model = Person
+
+    @classmethod
+    def name(cls) -> str:
+        return "grandparent of"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "grandchild of"
+
+
+class PersonSubordinateOfPerson(IARelationMixin):
+    subj_model = Person
+    obj_model = Person
+
+    @classmethod
+    def name(cls) -> str:
+        return "subordinate of"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "master of"
+
+
+class PersonIdenticalToPerson(IARelationMixin):
+    subj_model = Person
+    obj_model = Person
+
+    @classmethod
+    def name(cls) -> str:
+        return "identical to"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "identical to"
+
+
 auditlog.register(MonumentType)
 auditlog.register(Material)
 auditlog.register(ObjectType)
