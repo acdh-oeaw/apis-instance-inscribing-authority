@@ -416,6 +416,8 @@ class PersonMentionedInInscription(PersonMixin, IARelationMixin):
     subj_model = Person
     obj_model = Inscription
     reference = models.TextField(blank=True, null=True)
+    benediction = models.CharField(max_length=255, blank=True, null=True)
+    introduction = models.CharField(max_length=255, blank=True, null=True)
 
     @classmethod
     def name(cls) -> str:
