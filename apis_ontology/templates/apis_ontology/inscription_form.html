@@ -1,0 +1,30 @@
+{% extends "apis_core/apis_entities/abstractentity_form.html" %}
+{% load apis_highlighter %}
+
+{% load bibsonomy_templatetags %}
+
+{% block object-actions %}
+{% link_to_reference_on obj=object modal=True %}
+{% endblock object-actions %}
+
+{% block col-one %}
+
+{% if object.text_original %}
+<div class="card mb-2">
+<div class="card-header">
+    Inscription text {% select_highlighter_project request %}
+</div>
+<div class="card-body">
+    {% highlight_text object request "text_original" %}
+</div>
+</div>
+{% endif %}
+
+{{ block.super }}
+
+{% endblock col-one %}
+
+{% block scripts %}
+{{ block.super }}
+{% include "apis_highlighter/apis_highlighter.html" %}
+{% endblock scripts %}
