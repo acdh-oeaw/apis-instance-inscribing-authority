@@ -332,6 +332,7 @@ class PlaceLocatedInPlace(IARelationMixin):
 class InscriptionQuotesAsSourceWork(IARelationMixin):
     subj_model = Inscription
     obj_model = Work
+    reference = models.TextField(blank=True, null=True)
 
     @classmethod
     def name(cls) -> str:
