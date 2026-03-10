@@ -367,7 +367,7 @@ class ObjectPartOfMonument(IARelationMixin):
 
     @classmethod
     def reverse_name(cls) -> str:
-        return "contains part"
+        return "contains"
 
 
 class MonumentRepresentedAsIllustration(IARelationMixin):
