@@ -1,1 +1,1 @@
-{% if value %}{{ value|linebreaksbr }}{% endif %}
+{% if value %}{% autoescape off %}{{ value|urlize|linebreaksbr }}{% endautoescape %}{% endif %}
