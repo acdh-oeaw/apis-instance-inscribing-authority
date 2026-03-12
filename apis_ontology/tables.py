@@ -7,3 +7,23 @@ class IABaseModelTable(GenericTable):
         attrs = {
             "td": {"dir": "auto"},
         }
+        exclude = (
+            "id",
+            "noduplicate",
+        )
+        sequence = ("...", "view", "edit", "delete")
+
+
+class PersonTable(IABaseModelTable):
+    class Meta(IABaseModelTable.Meta):
+        fields = ("desc", "dynasty")
+
+
+class MonumentTable(IABaseModelTable):
+    class Meta(IABaseModelTable.Meta):
+        fields = ("desc", "monument_type")
+
+
+class ObjectTable(IABaseModelTable):
+    class Meta(IABaseModelTable.Meta):
+        fields = ("desc", "object_type")
