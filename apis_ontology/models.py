@@ -188,6 +188,7 @@ class Object(IABaseModel, PreservationStateMixin):
 
 
 class Inscription(IABaseModel, PreservationStateMixin):
+    writing_field = models.TextField(blank=True, null=True)
     reference_tei = models.CharField(
         max_length=255,
         blank=True,
