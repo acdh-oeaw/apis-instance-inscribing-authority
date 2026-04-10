@@ -1,1 +1,3 @@
-{% if value %}{% autoescape off %}{{ value|urlize|linebreaksbr }}{% endautoescape %}{% endif %}
+{% load custom_filters %}
+
+{% if value %}{% autoescape off %}{{ value|urlize_newtab|linebreaksbr }}{% endautoescape %}{% endif %}
