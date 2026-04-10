@@ -684,6 +684,32 @@ class PersonMakerOfObject(PersonMixin, IARelationMixin):
         return "object made by person"
 
 
+class ObjectConnectedToObject(IARelationMixin):
+    subj_model = Object
+    obj_model = Object
+
+    @classmethod
+    def name(cls) -> str:
+        return "object connected to"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "object connected to"
+
+
+class MonumentConnectedToMonument(IARelationMixin):
+    subj_model = Monument
+    obj_model = Monument
+
+    @classmethod
+    def name(cls) -> str:
+        return "monument connected to"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "monument connected to"
+
+
 auditlog.register(MonumentType)
 auditlog.register(Material)
 auditlog.register(ObjectType)
