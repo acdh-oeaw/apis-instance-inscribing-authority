@@ -140,6 +140,7 @@ dependencies = [
     { name = "apis-core-rdf" },
     { name = "apis-highlighter-ng" },
     { name = "django-interval" },
+    { name = "django-tables2" },
     { name = "psycopg", extra = ["binary"] },
 ]
 
@@ -150,6 +151,7 @@ requires-dist = [
     { name = "apis-core-rdf", specifier = "==0.60.1" },
     { name = "apis-highlighter-ng", specifier = ">=0.6.3" },
     { name = "django-interval", specifier = ">=0.5.1" },
+    { name = "django-tables2", specifier = "==2.8" },
     { name = "psycopg", extras = ["binary"], specifier = ">=3.2" },
 ]
 
