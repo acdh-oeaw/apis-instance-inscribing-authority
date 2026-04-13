@@ -10,7 +10,7 @@ packages = [{include = "apis_ontology"}]
 dependencies = [
     "apis-core-rdf==0.60.1",
     "apis-acdhch-default-settings==2.17.0",
-    "psycopg[binary]>=3.2",
+    "psycopg[binary]>=3.3.3",
     "django-interval>=0.5.1",
     "apis-bibsonomy>=0.13.2",
     "apis-highlighter-ng>=0.6.3",
