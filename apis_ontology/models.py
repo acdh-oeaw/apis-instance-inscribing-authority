@@ -93,6 +93,12 @@ class Style(VocabularyBaseModel):
     pass
 
 
+class Ornaments(VocabularyBaseModel):
+    class Meta(VocabularyBaseModel.Meta):
+        verbose_name = "ornament"
+        verbose_name_plural = "ornaments"
+
+
 class Technique(VocabularyBaseModel):
     pass
 
@@ -718,6 +724,7 @@ auditlog.register(Technique)
 auditlog.register(Diacritics)
 auditlog.register(TextClassification)
 auditlog.register(Language)
+auditlog.register(Ornaments)
 auditlog.register(Dynasty)
 auditlog.register(PersonRole)
 auditlog.register(Monument)
