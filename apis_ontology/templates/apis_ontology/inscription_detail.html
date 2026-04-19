@@ -1,0 +1,20 @@
+{% extends "apis_core/apis_entities/abstractentity_detail.html" %}
+{% load apis_highlighter %}
+{% block col-one %}
+
+{% if object.text_original %}
+<div class="card mb-2">
+    <div class="card-body" dir="auto">
+        {% highlight_text object request "text_original" %}
+    </div>
+</div>
+{% endif %}
+
+{{ block.super }}
+
+{% endblock col-one %}
+
+{% block scripts %}
+{{ block.super }}
+{% include "apis_highlighter/apis_highlighter.html" %}
+{% endblock scripts %}
