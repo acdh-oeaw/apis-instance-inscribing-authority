@@ -11,7 +11,7 @@ class IABaseModelTable(GenericTable):
             "id",
             "noduplicate",
         )
-        sequence = ("...", "view", "edit", "delete")
+        sequence = ("...", "actions")
 
 
 class PersonTable(IABaseModelTable):
