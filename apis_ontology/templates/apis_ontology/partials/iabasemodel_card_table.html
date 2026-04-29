@@ -7,11 +7,15 @@
     {% include template_list %}
     {% endfor %}
 </table>
-<div id="referenceon{{ object.content_type.id }}_{{ object.pk }}dlg">
-    References:
-<ul>
-  {% for ref in object.content_type.id|get_references:object.pk %}
-    <li>{{ ref }}</li>
-    {% endfor %}
-    </ul>
-</div>
+{% with refs=object.content_type.id|get_references:object.pk %}
+    {% if refs %}
+        <div id="referenceon{{ object.content_type.id }}_{{ object.pk }}dlg">
+                References:
+                <ul>
+                    {% for ref in refs %}
+                        <li>{{ ref }}</li>
+                    {% endfor %}
+                </ul>
+        </div>
+    {% endif %}
+{% endwith %}
