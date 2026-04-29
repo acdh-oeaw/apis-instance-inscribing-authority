@@ -1,0 +1,52 @@
+{% load generic %}
+{% load references %}
+<table class="table table-hover">
+    <tr>
+        <th>ID</th>
+        <td>{{ object.pk }}</td>
+    </tr>
+    <tr>
+        <th>Preferred Name</th>
+        <td>{{ object }}</td>
+    </tr>
+    <tr>
+        <th>Person Role</th>
+        <td>{% for role in object.person_role.all %}{{ role }}{% if not forloop.last %}, {% endif %}{% empty %}-{% endfor %}</td>
+    </tr>
+    <tr>
+        <th>Active Years Start</th>
+        <td>{{ object.active_years_start|default_if_none:"-" }}</td>
+    </tr>
+    <tr>
+        <th>Active Years End</th>
+        <td>{{ object.active_years_end|default_if_none:"-" }}</td>
+    </tr>
+    <tr>
+        <th>Dynasty</th>
+        <td>{% for dynasty in object.dynasty.all %}{{ dynasty }}{% if not forloop.last %}, {% endif %}{% empty %}-{% endfor %}</td>
+    </tr>
+    <tr>
+        <th>Gender</th>
+        <td>{{ object.get_gender_display|default_if_none:"-" }}</td>
+    </tr>
+    {% modeldict object as d %}
+    {% for key, value in d.items %}
+    
+        {% if key.name != "id" and key.name != "pk" and key.name != "preferred_name" and key.name != "person_role" and key.name != "active_years_start" and key.name != "active_years_end" and key.name != "dynasty" and key.name != "gender" and key.name != "person_title" and key.name != "kunya" and key.name != "ism" and key.name != "nasab" and key.name != "nisba" and key.name != "relation_to_caliph" %}
+            {% model_field_template_lookup_list object key "table_row" as template_list %}
+            {% include template_list %}
+        {% endif %}
+    {% endfor %}
+</table>
+{% with refs=object.content_type.id|get_references:object.pk %}
+    {% if refs %}
+        <div id="referenceon{{ object.content_type.id }}_{{ object.pk }}dlg">
+            References:
+            <ul>
+                {% for ref in refs %}
+                    <li>{{ ref }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+{% endwith %}
