@@ -213,6 +213,7 @@ class Inscription(IABaseModel, PreservationStateMixin):
     dimensions_height = models.CharField(
         max_length=255, blank=True, null=True, help_text="in cm"
     )
+    remarks_on_material_and_technique = models.TextField(blank=True, null=True)
     style = models.ManyToManyField(Style, blank=True)
     diacritics = models.ManyToManyField(Diacritics, blank=True)
     ornaments = models.TextField(blank=True, null=True)
@@ -222,7 +223,7 @@ class Inscription(IABaseModel, PreservationStateMixin):
     text_original = models.TextField(blank=True, null=True)
     text_transliteration = models.TextField(blank=True, null=True)
     text_translation = models.TextField(blank=True, null=True)
-    remarks = models.TextField(blank=True, null=True)
+    remarks = models.TextField(blank=True, null=True, verbose_name="remarks on text")
     date = FuzzyDateParserField(parser=nomansland_dateparser, null=True, blank=True)
     remarks_on_date = models.TextField(blank=True, null=True)
     comparisons = models.TextField(blank=True, null=True)
