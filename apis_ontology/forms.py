@@ -2,4 +2,30 @@ from apis_core.generic.forms import GenericModelForm
 
 
 class InscriptionForm(GenericModelForm):
-    pass
+
+    field_order = [
+        "material",
+        "technique",
+        "dimensions_length",
+        "dimensions_breadth",
+        "dimensions_height",
+        "remarks_on_material_and_technique",
+        "preservation_state",
+        "remarks_on_preservation",
+        "distribution",
+        "style",
+        "diacritics",
+        "ornaments",
+        "remarks_on_style_and_ornaments",
+        "text_classification",
+        "language",
+        "writing_field",
+        "text_original",
+        "text_transliteration",
+        "text_translation",
+        "remarks",
+        "date",
+        "remarks_on_date",
+        "comparisons",
+        "reference_tei",
+    ]
