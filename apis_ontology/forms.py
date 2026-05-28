@@ -12,6 +12,7 @@ class InscriptionForm(GenericModelForm):
         "remarks_on_material_and_technique",
         "preservation_state",
         "remarks_on_preservation",
+        "writing_field",
         "distribution",
         "style",
         "diacritics",
