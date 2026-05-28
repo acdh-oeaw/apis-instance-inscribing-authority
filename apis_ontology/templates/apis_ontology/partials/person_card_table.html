@@ -1,5 +1,6 @@
+{% extends "apis_ontology/partials/iabasemodel_card_table.html" %}
 {% load generic %}
-{% load references %}
+{% block details %}
 <table class="table table-hover">
     <tr>
         <th>ID</th>
@@ -38,15 +39,4 @@
         {% endif %}
     {% endfor %}
 </table>
-{% with refs=object.content_type.id|get_references:object.pk %}
-    {% if refs %}
-        <div id="referenceon{{ object.content_type.id }}_{{ object.pk }}dlg">
-            References:
-            <ul>
-                {% for ref in refs %}
-                    <li>{{ ref }}</li>
-                {% endfor %}
-            </ul>
-        </div>
-    {% endif %}
-{% endwith %}
+{% endblock details %}

@@ -20,7 +20,6 @@ class InscriptionForm(GenericModelForm):
         "remarks_on_style_and_ornaments",
         "text_classification",
         "language",
-        "writing_field",
         "text_original",
         "text_transliteration",
         "text_translation",

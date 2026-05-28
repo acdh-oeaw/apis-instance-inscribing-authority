@@ -1,0 +1,138 @@
+{% extends "apis_ontology/partials/iabasemodel_card_table.html" %}
+{% load generic %}
+{% block details %}
+<table class="table table-hover">
+    <tr>
+        <th>ID</th>
+        <td>{{ object.pk }}</td>
+    </tr>
+    <tr>
+        <th>Material</th>
+        <td>
+            {% for sub in object.material.all %}
+            {{ sub.label }}<br />
+            {% endfor %}
+        </td>
+    </tr>
+    <tr>
+        <th>Technique</th>
+        <td>
+            {% for sub in object.technique.all %}
+            {{ sub.label }}<br />
+            {% endfor %}
+        </td>
+    </tr>
+    <tr>
+        <th>Dimensions (L x B x H)</th>
+        <td>
+            {% if object.dimensions_length %}
+            {{ object.dimensions_length }} cm
+            {% else %}
+            ?
+            {% endif %}
+            x
+            {% if object.dimensions_breadth %}
+            {{ object.dimensions_breadth }} cm
+            {% else %}
+            ?
+            {% endif %}
+            x
+            {% if object.dimensions_height %}
+            {{ object.dimensions_height }} cm
+            {% else %}
+            ?
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <th>Remarks on material and technique</th>
+        <td>{{ object.remarks_on_material_and_technique }}</td>
+    </tr>
+    <tr>
+        <th>State of preservation</th>
+        <td>{{ object.preservation_state|linebreaksbr }}</td>
+    </tr>
+    <tr>
+        <th>Remarks on state of preservation</th>
+        <td>{{ object.remarks_on_preservation |linebreaksbr }}</td>
+    </tr>
+    <tr>
+        <th>Writing field</th>
+        <td>{{ object.writing_field |linebreaksbr }}</td>
+    </tr>
+    <tr>
+        <th>Distribution</th>
+        <td>{{ object.distribution |linebreaksbr }}</td>
+    </tr>
+    <tr>
+        <th>Style</th>
+        <td>{% for s in object.style.all %}{{ s }}{% if not forloop.last %}, {% endif %}{% empty %}-{% endfor %}
+        </td>
+    </tr>
+    <tr>
+        <th>Diacritics</th>
+        <td>{% for s in object.diacritics.all %}{{ s }}{% if not forloop.last %}, {% endif %}{% empty %}-{% endfor %}
+        </td>
+    </tr>
+    <tr>
+        <th>Ornaments</th>
+        <td>{% for s in object.ornaments.all %}{{ s }}{% if not forloop.last %}, {% endif %}{% empty %}-{% endfor %}
+        </td>
+    </tr>
+    <tr>
+        <th>Remarks on style and ornaments</th>
+        <td>{{ object.remarks_on_style_and_ornaments |linebreaksbr }}</td>
+    </tr>
+    <tr>
+        <th>Text classification</th>
+        <td>{% for s in object.text_classification.all %}{{ s }}{% if not forloop.last %}, {% endif %}{% empty %}-{%
+            {% endfor %}
+        </td>
+    </tr>
+    <tr>
+        <th>Language</th>
+        <td>{% for s in object.language.all %}{{ s }}{% if not forloop.last %}, {% endif %}{% empty %}-{% endfor %}
+        </td>
+    </tr>
+    <tr>
+        <th>Original text</th>
+        <td>{{ object.text_original |linebreaksbr }}</td>
+    </tr>
+    <tr>
+        <th>Transliteration</th>
+        <td>{{ object.text_transliteration |linebreaksbr }}</td>
+    </tr>
+    <tr>
+        <th>Translation</th>
+        <td>{{ object.text_translation |linebreaksbr }}</td>
+    </tr>
+    
+    <tr>
+        <th>Remarks</th>
+        <td>{{ object.remarks |linebreaksbr }}</td>
+    </tr>
+    <tr>
+        <th>Date</th>
+        <td>{{ object.date |linebreaksbr }}</td>
+        </tr>
+        
+    <tr>
+        <th>Remarks on date</th>
+        <td>{{ object.remarks_on_date |linebreaksbr }}</td>
+        </tr>
+        
+    <tr>
+        <th>Comparisons</th>
+        <td>{{ object.comparisons |linebreaksbr }}</td>
+        </tr>
+        
+    <tr>
+        <th>Thesaurus d'Epigraphie Islamique ID</th>
+        <td>
+            <a target="_blank" href='https://www.epigraphie-islamique.uliege.be/thesaurus/User/EpigraphyDisplay.aspx?id={{ object.reference_tei}}&pan=1&st={{ object.reference_tei }}&sc=1'>
+                        {{ object.reference_tei }}
+            </a>
+        </td>
+        </tr>
+        </table>
+{% endblock details %}
