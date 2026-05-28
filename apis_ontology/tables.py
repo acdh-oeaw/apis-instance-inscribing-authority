@@ -54,7 +54,7 @@ class PersonInscriptionRelationsTable(InscriptionPersonRelationsTable):
 
 class PersonTable(IABaseModelTable):
     class Meta(IABaseModelTable.Meta):
-        fields = ("desc", "dynasty")
+        fields = ("desc", "dynasty", "person_role")
 
 
 class MonumentTable(IABaseModelTable):
