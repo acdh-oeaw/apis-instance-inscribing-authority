@@ -1,5 +1,6 @@
 {% load generic %}
 {% load references %}
+{% autoescape off %}
 {% block details %}
 <table class="table table-hover">
     {% modeldict object as d %}
@@ -9,6 +10,7 @@
     {% endfor %}
 </table>
 {% endblock details %}
+{% endautoescape %}
 {% block references %}
 {% with refs=object.content_type.id|get_references:object.pk %}
     {% if refs %}
