@@ -1,5 +1,6 @@
 {% load generic %}
 {% load references %}
+{% block details %}
 <table class="table table-hover">
     {% modeldict object as d %}
     {% for key, value in d.items %}
@@ -7,6 +8,8 @@
     {% include template_list %}
     {% endfor %}
 </table>
+{% endblock details %}
+{% block references %}
 {% with refs=object.content_type.id|get_references:object.pk %}
     {% if refs %}
         <div id="referenceon{{ object.content_type.id }}_{{ object.pk }}dlg">
@@ -19,3 +22,4 @@
         </div>
     {% endif %}
 {% endwith %}
+{% endblock references %}
