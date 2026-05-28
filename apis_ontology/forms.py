@@ -29,3 +29,20 @@ class InscriptionForm(GenericModelForm):
         "comparisons",
         "reference_tei",
     ]
+
+
+class PersonForm(GenericModelForm):
+    field_order = [
+        "preferred_name",
+        "person_role",
+        "active_years_start",
+        "active_years_end",
+        "dynasty",
+        "gender",
+        "person_title",
+        "kunya",
+        "ism",
+        "nasab",
+        "nisba",
+        "relation to caliph",
+    ]
