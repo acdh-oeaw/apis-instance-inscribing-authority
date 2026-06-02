@@ -301,7 +301,7 @@ class Person(E21_Person, PersonMixin, IABaseModel):
     def __str__(self):
         if self.preferred_name:
             return self.preferred_name
-        parts = [self.person_title, self.ism, self.kunya, self.nasab, self.nisba]
+        parts = [self.person_title, self.kunya, self.ism, self.nasab, self.nisba]
         return " ".join([part for part in parts if part])
 
     class Meta(E21_Person.Meta, IABaseModel.Meta):
