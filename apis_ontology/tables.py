@@ -38,8 +38,8 @@ class InscriptionPersonRelationsTable(IABaseModelRelationsTable):
     def render_full_name(self, record):
         parts = [
             getattr(record, "person_title", None),
-            getattr(record, "ism", None),
             getattr(record, "kunya", None),
+            getattr(record, "ism", None),
             getattr(record, "nasab", None),
             getattr(record, "nisba", None),
             getattr(record, "relation_to_caliph", None),
