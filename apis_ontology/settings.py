@@ -9,6 +9,7 @@ ADDITIONAL_APPS = [
     "apis_core.uris",
     "apis_core.documentation",
     "apis_bibsonomy",
+    "apis_datamodel",
 ]
 for app in ADDITIONAL_APPS:
     if app not in INSTALLED_APPS:
