@@ -1,4 +1,3 @@
-
 import logging
 from django import template
 from apis_bibsonomy.models import Reference
@@ -21,10 +20,10 @@ def get_references(content_type, object_id):
             if author and isinstance(author, list) and author[0]:
                 a = author[0]
                 name = []
-                if 'family' in a:
-                    name.append(a['family'])
-                if 'given' in a:
-                    name.append(a['given'])
+                if "family" in a:
+                    name.append(a["family"])
+                if "given" in a:
+                    name.append(a["given"])
                 if name:
                     parts.append(", ".join(name))
             year = None
@@ -35,16 +34,41 @@ def get_references(content_type, object_id):
                     year = date_parts[0][0] if len(date_parts[0]) > 0 else None
             if year:
                 parts.append(f"({year})")
-            title = data.get("title")
+
+            title_parts = []
+            if data.get("title"):
+                title_parts.append(data.get("title"))
+
+            if ref.pages_start and ref.pages_end:
+                title_parts.append(f"pp. {ref.pages_start}–{ref.pages_end}")
+            if ref.pages_start and not ref.pages_end:
+                title_parts.append(f"p. {ref.pages_start}")
+            if ref.pages_end and not ref.pages_start:
+                title_parts.append(f"p. {ref.pages_end}")
+
+            if ref.folio:
+                title_parts.append(ref.folio)
+
+            if ref.notes:
+                title_parts.append(ref.notes)
+
+            title = ", ".join(title_parts).strip()
+
             if title:
-                parts.append(title)
+                parts.append(f"{title}.")
+
             if parts:
                 formatted_refs.append(". ".join(parts))
+
             else:
-                logging.warning(f"Could not construct custom reference for Reference id={ref.id}, using default string.")
+                logging.warning(
+                    f"Could not construct custom reference for Reference id={ref.id}, using default string."
+                )
                 formatted_refs.append(str(ref))
         except (json.JSONDecodeError, IndexError, AttributeError, TypeError) as e:
-            logging.warning(f"Error parsing Reference id={ref.id}: {e}. Using default string representation.")
+            logging.warning(
+                f"Error parsing Reference id={ref.id}: {e}. Using default string representation."
+            )
             formatted_refs.append(str(ref))
 
     return formatted_refs
