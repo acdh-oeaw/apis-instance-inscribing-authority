@@ -2,6 +2,14 @@ from django.urls import include, path
 
 from apis_acdhch_default_settings.urls import urlpatterns
 
+from apis_ontology.views import GraphView
+
+urlpatterns += [    path(
+        "graph/",
+        GraphView.as_view(),
+        name="graph_view",
+    ),
+]
 urlpatterns += [
     path("highlighter/", include("apis_highlighter.urls", namespace="highlighter")),
 ]
