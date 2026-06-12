@@ -1,5 +1,7 @@
 import logging
-
+import math
+from django.core.cache import cache
+from django.db import models
 from apis_core.apis_entities.abc import (
     E21_Person,
     E53_Place,
@@ -15,6 +17,7 @@ from django_interval.fields import FuzzyDateParserField
 from .date_utils import nomansland_dateparser
 from auditlog.registry import auditlog
 from django.utils.functional import cached_property
+from django.utils.translation import gettext_lazy as _
 
 
 logger = logging.getLogger(__name__)
@@ -715,6 +718,116 @@ class MonumentConnectedToMonument(IARelationMixin):
     @classmethod
     def reverse_name(cls) -> str:
         return "monument connected to"
+
+
+class GraphSearchSnapshot(models.Model):
+    DEFAULT_KEY = "global"
+    CACHE_KEY = "graph_nodes_links_snapshot"
+
+    key = models.CharField(max_length=64, unique=True, default=DEFAULT_KEY)
+    nodes = models.JSONField(default=list, blank=True)
+    links = models.JSONField(default=list, blank=True)
+    node_count = models.PositiveIntegerField(default=0, editable=False)
+    link_count = models.PositiveIntegerField(default=0, editable=False)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = _("graph search snapshot")
+        verbose_name_plural = _("Graph search snapshots")
+
+    def __str__(self):
+        return f"{self.key} ({self.node_count} nodes / {self.link_count} links)"
+
+    @staticmethod
+    def _assign_node_sizes(nodes, links, max_size=6, base_size=4, scale=10):
+        degree = {}
+
+        for link in links:
+            source = link.get("source")
+            target = link.get("target")
+            if source:
+                degree[source] = degree.get(source, 0) + 1
+            if target:
+                degree[target] = degree.get(target, 0) + 1
+
+        for node in nodes:
+            d = degree.get(node["id"], 0)
+            size = base_size + max_size * (math.atan(d / scale) / (math.pi / 2))
+            node["size"] = round(size, 2)
+
+        return nodes
+
+    @classmethod
+    def build_payload(cls):
+        nodes = []
+
+        def iter_iabase_models(base_model):
+            for model in base_model.__subclasses__():
+                if not model._meta.abstract:
+                    yield model
+                yield from iter_iabase_models(model)
+
+        def get_relation_labels(relation):
+            if hasattr(relation, "name") and callable(relation.name):
+                label = relation.name()
+            else:
+                label = relation.__class__.__name__
+
+            if hasattr(relation, "reverse_name") and callable(relation.reverse_name):
+                reverse_label = relation.reverse_name()
+            else:
+                reverse_label = f"{label} [REVERSE]"
+
+            return label, reverse_label
+
+        def add_nodes(qs, group):
+            for obj in qs:
+                nodes.append({"id": obj.id, "label": str(obj), "group": group})
+
+        seen_models = set()
+        for model in iter_iabase_models(IABaseModel):
+            if model in seen_models:
+                continue
+            seen_models.add(model)
+            add_nodes(model.objects.only("id"), model._meta.model_name)
+
+        node_ids = {n["id"] for n in nodes}
+        links = []
+        relations = (
+            Relation.objects.select_subclasses()
+            .exclude(subj_object_id__isnull=True, obj_object_id__isnull=True)
+            .filter(subj_object_id__in=node_ids, obj_object_id__in=node_ids)
+            .iterator(chunk_size=5000)
+        )
+        for relation in relations:
+            label, reverse_label = get_relation_labels(relation)
+            links.append(
+                {
+                    "source": relation.subj_object_id,
+                    "target": relation.obj_object_id,
+                    "label": label,
+                    "reverse_label": reverse_label,
+                    "group": f"{label}|{reverse_label}",
+                }
+            )
+
+        nodes = cls._assign_node_sizes(nodes, links)
+        return nodes, links
+
+    @classmethod
+    def rebuild(cls):
+        nodes, links = cls.build_payload()
+        snapshot, _ = cls.objects.update_or_create(
+            key=cls.DEFAULT_KEY,
+            defaults={
+                "nodes": nodes,
+                "links": links,
+                "node_count": len(nodes),
+                "link_count": len(links),
+            },
+        )
+        cache.delete(cls.CACHE_KEY)
+        return snapshot
 
 
 auditlog.register(MonumentType)
