@@ -18,4 +18,5 @@ urlpatterns += [path("", include("django_interval.urls"))]
 urlpatterns += (
     path("apis_bibsonomy/", include("apis_bibsonomy.urls", namespace="bibsonomy")),
 )
-urlpatterns += (path("datamodel/", include("apis_datamodel.urls")),)
+urlpatterns +=  [    path("datamodel/", include("apis_datamodel.urls"), name="datamodel"),
+    ]
