@@ -88,27 +88,10 @@ class GraphView(CosmographView):
         cache.set(cache_key, json.dumps((nodes, links)), 86400)
         return nodes, links
 
-    def _show_unconnected_nodes(self):
-        value = self.request.GET.get("show_unconnected", "1").strip().lower()
-        return value not in {"0", "false", "no", "off"}
-
-    def _apply_unconnected_visibility(self, nodes, links):
-        if not links or self._show_unconnected_nodes():
-            return nodes, links
-
-        linked_node_ids = {
-            endpoint
-            for link in links
-            for endpoint in (link.get("source"), link.get("target"))
-            if endpoint is not None
-        }
-        return [node for node in nodes if node.get("id") in linked_node_ids], links
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         snapshot_nodes, _ = self._get_snapshot_nodes_links()
         context["graph_query"] = self.request.GET.get("q", "").strip()
-        context["graph_show_unconnected"] = self._show_unconnected_nodes()
         context["graph_collection_choices"] = self._collection_choices(snapshot_nodes)
         context["graph_selected_collection_ids"] = self._get_selected_collection_ids()
         return context
@@ -184,7 +167,6 @@ class GraphView(CosmographView):
             f"After filtering, graph has {len(nodes)} nodes and {len(links or [])} links"
         )
         
-        nodes, links = self._apply_unconnected_visibility(nodes, links)
         self._graph_has_links = bool(links)
         if not links and nodes:
             node_id = nodes[0]["id"]
