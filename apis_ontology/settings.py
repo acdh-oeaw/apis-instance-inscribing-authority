@@ -10,6 +10,7 @@ ADDITIONAL_APPS = [
     "apis_core.documentation",
     "apis_bibsonomy",
     "apis_datamodel",
+    "django_cosmograph",
 ]
 for app in ADDITIONAL_APPS:
     if app not in INSTALLED_APPS:
@@ -25,3 +26,16 @@ APIS_BIBSONOMY = [
         "group": "6319038",
     }
 ]
+
+CSP_WORKER_SRC = ("blob:",)
+
+CSP_SCRIPT_SRC = (
+    "'self'",
+    "'unsafe-inline'",
+    "'unsafe-eval'",
+    "'wasm-unsafe-eval'",
+    "cdnjs.cloudflare.com",
+    "cdn.jsdelivr.net",
+    "ajax.googleapis.com",
+    "unpkg.com",
+)
