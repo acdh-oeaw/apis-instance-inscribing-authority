@@ -8,9 +8,11 @@ from apis_core.apis_entities.abc import (
     SimpleLabelModel,
 )
 from apis_core.apis_entities.models import AbstractEntity
+from apis_core.collections.models import SkosCollectionContentObject
 from apis_core.generic.abc import GenericModel
 from apis_core.history.models import VersionMixin
 from apis_core.relations.models import Relation
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django_interval.fields import FuzzyDateParserField
 
@@ -722,7 +724,7 @@ class MonumentConnectedToMonument(IARelationMixin):
 
 class GraphSearchSnapshot(models.Model):
     DEFAULT_KEY = "global"
-    CACHE_KEY = "graph_nodes_links_snapshot"
+    CACHE_KEY = "graph_nodes_links_snapshot_v2"
 
     key = models.CharField(max_length=64, unique=True, default=DEFAULT_KEY)
     nodes = models.JSONField(default=list, blank=True)
@@ -780,16 +782,47 @@ class GraphSearchSnapshot(models.Model):
 
             return label, reverse_label
 
-        def add_nodes(qs, group):
+        def get_collections_by_object_id(model, object_ids):
+            if not object_ids:
+                return {}
+
+            content_type = ContentType.objects.get_for_model(model)
+            collection_map = {}
+            collection_links = (
+                SkosCollectionContentObject.objects.filter(
+                    content_type=content_type,
+                    object_id__in=object_ids,
+                )
+                .select_related("collection")
+                .iterator(chunk_size=5000)
+            )
+            for link in collection_links:
+                collection_map.setdefault(link.object_id, []).append(
+                    {
+                        "id": link.collection_id,
+                        "label": str(link.collection),
+                    }
+                )
+            return collection_map
+
+        def add_nodes(qs, group, collection_map):
             for obj in qs:
-                nodes.append({"id": obj.id, "label": str(obj), "group": group})
+                node = {"id": obj.id, "label": str(obj), "group": group}
+                collections = collection_map.get(obj.id, [])
+                if collections:
+                    node["collection_ids"] = [collection["id"] for collection in collections]
+                    node["collections"] = collections
+                nodes.append(node)
 
         seen_models = set()
         for model in iter_iabase_models(IABaseModel):
             if model in seen_models:
                 continue
             seen_models.add(model)
-            add_nodes(model.objects.only("id"), model._meta.model_name)
+            queryset = model.objects.only("id")
+            object_ids = list(queryset.values_list("id", flat=True))
+            collection_map = get_collections_by_object_id(model, object_ids)
+            add_nodes(queryset, model._meta.model_name, collection_map)
 
         node_ids = {n["id"] for n in nodes}
         links = []
