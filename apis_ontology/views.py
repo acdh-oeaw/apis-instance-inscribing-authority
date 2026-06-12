@@ -4,6 +4,8 @@ from django.core.cache import cache
 import json
 import math
 import logging
+from django_cosmograph.utils import assign_node_sizes
+
 logger = logging.getLogger(__name__)
 
 class GraphView(CosmographView):
@@ -102,24 +104,6 @@ class GraphView(CosmographView):
         }
         return [node for node in nodes if node.get("id") in linked_node_ids], links
 
-    def _assign_linkless_fallback_positions(self, nodes, links):
-        linked_node_ids = {
-            endpoint
-            for link in links
-            for endpoint in (link.get("source"), link.get("target"))
-            if endpoint is not None
-        }
-        linkless_nodes = [n for n in nodes if n.get("id") not in linked_node_ids]
-        if linkless_nodes:
-            radius = max(20.0, len(linkless_nodes) * 3.0)
-            for index, node in enumerate(linkless_nodes):
-                if "x" in node and "y" in node:
-                    continue
-                angle = (2.0 * math.pi * index) / len(linkless_nodes)
-                node["x"] = round(radius * math.cos(angle), 3)
-                node["y"] = round(radius * math.sin(angle), 3)
-        return nodes
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         snapshot_nodes, _ = self._get_snapshot_nodes_links()
@@ -187,11 +171,6 @@ class GraphView(CosmographView):
             if node.get("id") in visible_node_ids and node not in filtered_nodes:
                 filtered_nodes.append(node)
 
-        # Cosmograph can fail to place linkless nodes in a visible region.
-        filtered_nodes = self._assign_linkless_fallback_positions(
-            filtered_nodes, filtered_links
-        )
-
         return filtered_nodes, filtered_links
 
     def get_nodes_links(self):
@@ -200,11 +179,11 @@ class GraphView(CosmographView):
 
         nodes, links = self._apply_collection_filter(nodes, links)
         nodes, links = self._filter_nodes_links(nodes, links)
-        nodes = self._assign_linkless_fallback_positions(nodes, links)
         nodes = self._serialize_nodes_for_cosmograph(nodes)
         logger.debug(
             f"After filtering, graph has {len(nodes)} nodes and {len(links or [])} links"
         )
+        
         nodes, links = self._apply_unconnected_visibility(nodes, links)
         self._graph_has_links = bool(links)
         if not links and nodes:
