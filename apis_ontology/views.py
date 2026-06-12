@@ -9,12 +9,89 @@ logger = logging.getLogger(__name__)
 class GraphView(CosmographView):
     # TODO: How do I restrict the view based on user permissions
 
+    def _get_selected_collection_ids(self):
+        values = []
+        for value in self.request.GET.getlist("collection"):
+            if not value:
+                continue
+            values.extend(part.strip() for part in value.split(","))
+
+        selected_ids = set()
+        for value in values:
+            if value.isdigit():
+                selected_ids.add(int(value))
+        return selected_ids
+
+    def _apply_collection_filter(self, nodes, links):
+        selected_collection_ids = self._get_selected_collection_ids()
+        if not selected_collection_ids:
+            return nodes, links
+
+        filtered_nodes = [
+            node
+            for node in nodes
+            if selected_collection_ids.intersection(node.get("collection_ids", []))
+        ]
+        filtered_node_ids = {node.get("id") for node in filtered_nodes}
+
+        filtered_links = [
+            link
+            for link in links
+            if link.get("source") in filtered_node_ids
+            and link.get("target") in filtered_node_ids
+        ]
+
+        return filtered_nodes, filtered_links
+
+    def _collection_choices(self, nodes):
+        choices = {}
+        for node in nodes:
+            for collection in node.get("collections", []):
+                collection_id = collection.get("id")
+                if collection_id is None:
+                    continue
+                choices[collection_id] = collection.get("label", str(collection_id))
+
+        return [
+            {"id": collection_id, "label": label}
+            for collection_id, label in sorted(
+                choices.items(), key=lambda item: item[1].lower()
+            )
+        ]
+
+    def _serialize_nodes_for_cosmograph(self, nodes):
+        serialized_nodes = []
+        for node in nodes:
+            clean_node = dict(node)
+            clean_node.pop("collection_ids", None)
+            clean_node.pop("collections", None)
+            serialized_nodes.append(clean_node)
+        return serialized_nodes
+
+    def _get_snapshot_nodes_links(self):
+        cache_key = GraphSearchSnapshot.CACHE_KEY
+        cached_data = cache.get(cache_key)
+        if cached_data:
+            return json.loads(cached_data)
+
+        snapshot = GraphSearchSnapshot.objects.filter(
+            key=GraphSearchSnapshot.DEFAULT_KEY
+        ).first()
+        if snapshot is None:
+            logger.debug("Graph snapshot missing - rebuilding from source models")
+            snapshot = GraphSearchSnapshot.rebuild()
+
+        nodes = snapshot.nodes
+        links = snapshot.links
+        cache.set(cache_key, json.dumps((nodes, links)), 86400)
+        return nodes, links
+
     def _show_unconnected_nodes(self):
         value = self.request.GET.get("show_unconnected", "1").strip().lower()
         return value not in {"0", "false", "no", "off"}
 
     def _apply_unconnected_visibility(self, nodes, links):
-        if self._show_unconnected_nodes():
+        if not links or self._show_unconnected_nodes():
             return nodes, links
 
         linked_node_ids = {
@@ -25,11 +102,37 @@ class GraphView(CosmographView):
         }
         return [node for node in nodes if node.get("id") in linked_node_ids], links
 
+    def _assign_linkless_fallback_positions(self, nodes, links):
+        linked_node_ids = {
+            endpoint
+            for link in links
+            for endpoint in (link.get("source"), link.get("target"))
+            if endpoint is not None
+        }
+        linkless_nodes = [n for n in nodes if n.get("id") not in linked_node_ids]
+        if linkless_nodes:
+            radius = max(20.0, len(linkless_nodes) * 3.0)
+            for index, node in enumerate(linkless_nodes):
+                if "x" in node and "y" in node:
+                    continue
+                angle = (2.0 * math.pi * index) / len(linkless_nodes)
+                node["x"] = round(radius * math.cos(angle), 3)
+                node["y"] = round(radius * math.sin(angle), 3)
+        return nodes
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        snapshot_nodes, _ = self._get_snapshot_nodes_links()
         context["graph_query"] = self.request.GET.get("q", "").strip()
         context["graph_show_unconnected"] = self._show_unconnected_nodes()
+        context["graph_collection_choices"] = self._collection_choices(snapshot_nodes)
+        context["graph_selected_collection_ids"] = self._get_selected_collection_ids()
         return context
+
+    def get_params(self, *args, **kwargs):
+        params = super().get_params(*args, **kwargs)
+        params["renderLinks"] = getattr(self, "_graph_has_links", True)
+        return params
 
     def _filter_nodes_links(self, nodes, links):
         query = self.request.GET.get("q", "").strip().lower()
@@ -85,53 +188,34 @@ class GraphView(CosmographView):
                 filtered_nodes.append(node)
 
         # Cosmograph can fail to place linkless nodes in a visible region.
-        # Give them deterministic coordinates on a small circle as a fallback.
-        linked_node_ids = {
-            endpoint
-            for link in filtered_links
-            for endpoint in (link.get("source"), link.get("target"))
-            if endpoint is not None
-        }
-        linkless_nodes = [n for n in filtered_nodes if n.get("id") not in linked_node_ids]
-        if linkless_nodes:
-            radius = max(20.0, len(linkless_nodes) * 3.0)
-            for index, node in enumerate(linkless_nodes):
-                if "x" in node and "y" in node:
-                    continue
-                angle = (2.0 * math.pi * index) / len(linkless_nodes)
-                node["x"] = round(radius * math.cos(angle), 3)
-                node["y"] = round(radius * math.sin(angle), 3)
+        filtered_nodes = self._assign_linkless_fallback_positions(
+            filtered_nodes, filtered_links
+        )
 
         return filtered_nodes, filtered_links
 
     def get_nodes_links(self):
-        cache_key = GraphSearchSnapshot.CACHE_KEY
-        cached_data = cache.get(cache_key)
-        if cached_data:
-            nodes, links = json.loads(cached_data)
-            nodes, links = self._filter_nodes_links(nodes, links)
-            nodes, links = self._apply_unconnected_visibility(nodes, links)
-            logger.debug(
-                f"Loaded graph from cache with {len(nodes)} nodes and {len(links)} links"
-            )
-            return nodes, links
-
-        snapshot = GraphSearchSnapshot.objects.filter(
-            key=GraphSearchSnapshot.DEFAULT_KEY
-        ).first()
-        if snapshot is None:
-            logger.debug("Graph snapshot missing - rebuilding from source models")
-            snapshot = GraphSearchSnapshot.rebuild()
-
-        nodes = snapshot.nodes
-        links = snapshot.links
-
+        nodes, links = self._get_snapshot_nodes_links()
         logger.debug(f"Generated graph with {len(nodes)} nodes and {len(links)} links")
-        # Cache nodes and links as a JSON string for 24 hours
-        cache.set(cache_key, json.dumps((nodes, links)), 86400)
 
+        nodes, links = self._apply_collection_filter(nodes, links)
         nodes, links = self._filter_nodes_links(nodes, links)
+        nodes = self._assign_linkless_fallback_positions(nodes, links)
+        nodes = self._serialize_nodes_for_cosmograph(nodes)
         logger.debug(
-            f"After filtering, graph has {len(nodes)} nodes and {len(links)} links"
+            f"After filtering, graph has {len(nodes)} nodes and {len(links or [])} links"
         )
-        return self._apply_unconnected_visibility(nodes, links)
+        nodes, links = self._apply_unconnected_visibility(nodes, links)
+        self._graph_has_links = bool(links)
+        if not links and nodes:
+            node_id = nodes[0]["id"]
+            links = [
+                {
+                    "source": node_id,
+                    "target": node_id,
+                    "label": "",
+                    "reverse_label": "",
+                    "group": "__collection_placeholder__",
+                }
+            ]
+        return nodes, links

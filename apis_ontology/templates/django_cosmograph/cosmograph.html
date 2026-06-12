@@ -14,6 +14,14 @@
                 aria-label="Filter graph"
             >
         </div>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <select name="collection" class="form-select form-select-sm" aria-label="Filter by collection">
+                <option value="">All collections</option>
+                {% for collection in graph_collection_choices %}
+                <option value="{{ collection.id }}" {% if collection.id in graph_selected_collection_ids %}selected{% endif %}>{{ collection.label }}</option>
+                {% endfor %}
+            </select>
+        </div>
         <div class="col-auto">
             <button type="submit" class="btn btn-primary btn-sm">Filter</button>
         </div>
