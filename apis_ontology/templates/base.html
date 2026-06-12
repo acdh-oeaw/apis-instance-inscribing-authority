@@ -13,6 +13,22 @@ Inscribing Authority
 {% endif %}
 {% endblock title %}
 
+{% block main-menu %}
+<li class="nav-item dropdown">
+    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true"
+        aria-expanded="false">
+        About <span class="caret" />
+    </a>
+    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+        <a class="dropdown-item" href="{% url 'apis:documentation' %}">Data model</a>
+    </div>
+</li>
+        {{ block.super }}
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'graph_view' %}">Network</a>
+        </li>
+{% endblock main-menu %}
+
 {% block content %}
 <div class="mx-auto px-4">
 {% block dm_content %}
