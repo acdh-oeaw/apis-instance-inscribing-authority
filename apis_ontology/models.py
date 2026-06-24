@@ -810,7 +810,9 @@ class GraphSearchSnapshot(models.Model):
                 node = {"id": obj.id, "label": str(obj), "group": group}
                 collections = collection_map.get(obj.id, [])
                 if collections:
-                    node["collection_ids"] = [collection["id"] for collection in collections]
+                    node["collection_ids"] = [
+                        collection["id"] for collection in collections
+                    ]
                     node["collections"] = collections
                 nodes.append(node)
 
@@ -863,6 +865,71 @@ class GraphSearchSnapshot(models.Model):
         return snapshot
 
 
+class ObjectReusedInPlace(IARelationMixin):
+    subj_model = Object
+    obj_model = Place
+
+    @classmethod
+    def name(cls) -> str:
+        return "object reused in place"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "place reuses object"
+
+
+class ObjectReusedInMonument(IARelationMixin):
+    subj_model = Object
+    obj_model = Monument
+
+    @classmethod
+    def name(cls) -> str:
+        return "object reused in monument"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "monument reuses object"
+
+
+class ObjectReusedInObject(IARelationMixin):
+    subj_model = Object
+    obj_model = Object
+
+    @classmethod
+    def name(cls) -> str:
+        return "object reused in object"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "object reuses object"
+
+
+class ObjectPartOfObject(IARelationMixin):
+    subj_model = Object
+    obj_model = Object
+
+    @classmethod
+    def name(cls) -> str:
+        return "object part of object"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "object contains object"
+
+
+class ObjectFoundInMonument(IARelationMixin):
+    subj_model = Object
+    obj_model = Monument
+
+    @classmethod
+    def name(cls) -> str:
+        return "object found in monument"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "monument contains object"
+
+
 auditlog.register(MonumentType)
 auditlog.register(Material)
 auditlog.register(ObjectType)
@@ -897,3 +964,20 @@ auditlog.register(ObjectRelatedToInscription)
 auditlog.register(ObjectRepresentedAsIllustration)
 auditlog.register(ObjectFoundInplace)
 auditlog.register(InscriptionRepresentedAsIllustration)
+auditlog.register(PersonParentOfPerson)
+auditlog.register(PersonSiblingOfPerson)
+auditlog.register(PersonHusbandOfPerson)
+auditlog.register(PersonGrandparentOfPerson)
+auditlog.register(PersonSubordinateOfPerson)
+auditlog.register(PersonIdenticalToPerson)
+auditlog.register(PersonRelatedToObject)
+auditlog.register(PersonRelatedToMonument)
+auditlog.register(PersonMakerOfInscription)
+auditlog.register(PersonMakerOfMonument)
+auditlog.register(PersonMakerOfObject)
+auditlog.register(ObjectConnectedToObject)
+auditlog.register(MonumentConnectedToMonument)
+auditlog.register(ObjectReusedInPlace)
+auditlog.register(ObjectReusedInMonument)
+auditlog.register(ObjectReusedInObject)
+auditlog.register(ObjectPartOfObject)
