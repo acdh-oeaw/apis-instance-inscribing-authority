@@ -40,6 +40,7 @@ class PersonForm(GenericModelForm):
         "dynasty",
         "gender",
         "person_title",
+        "honorifics",
         "kunya",
         "ism",
         "nasab",
