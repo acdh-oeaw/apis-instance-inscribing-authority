@@ -2,12 +2,13 @@ import logging
 import math
 from django.core.cache import cache
 from django.db import models
-from apis_core.apis_entities.abc import (
+from apis_core.entities.abc import (
     E21_Person,
     E53_Place,
-    SimpleLabelModel,
 )
+from apis_core.generic.abc import SimpleLabelModel
 from apis_core.apis_entities.models import AbstractEntity
+from apis_core.entities.abc import Entity
 from apis_core.collections.models import SkosCollectionContentObject
 from apis_core.generic.abc import GenericModel
 from apis_core.history.models import VersionMixin
@@ -33,12 +34,12 @@ class IADateMixin(models.Model):
     end = FuzzyDateParserField(parser=nomansland_dateparser, null=True, blank=True)
 
 
-class VocabularyBaseModel(GenericModel, SimpleLabelModel):
-    class Meta(GenericModel.Meta, SimpleLabelModel.Meta):
+class VocabularyBaseModel(SimpleLabelModel):
+    class Meta(SimpleLabelModel.Meta):
         abstract = True
 
 
-class IABaseModel(VersionMixin, AbstractEntity):
+class IABaseModel(VersionMixin, AbstractEntity, Entity):
     class Meta(VersionMixin.Meta, AbstractEntity.Meta):
         abstract = True
 
