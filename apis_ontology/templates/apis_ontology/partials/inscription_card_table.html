@@ -85,8 +85,7 @@
     </tr>
     <tr>
         <th>Text classification</th>
-        <td>{% for s in object.text_classification.all %}{{ s }}{% if not forloop.last %}, {% endif %}{% empty %}-{%
-            {% endfor %}
+        <td>{% for s in object.text_classification.all %}{{ s }}{% if not forloop.last %}, {% endif %}{% empty %}-{% endfor %}
         </td>
     </tr>
     <tr>
