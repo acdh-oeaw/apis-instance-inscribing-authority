@@ -27,7 +27,7 @@ class InscriptionPersonRelationsTable(IABaseModelRelationsTable):
         sequence = ("...", "introduction", "full_name", "benediction", "actions")
 
     person_role = tables.Column(accessor="person_role")
-    full_name = tables.Column(accessor="ism", verbose_name="Full Name")
+    full_name = tables.Column(verbose_name="Full Name", empty_values=())
     introduction = tables.Column(accessor="introduction", verbose_name="Introduction")
     benediction = tables.Column(accessor="benediction", verbose_name="Benediction")
 
