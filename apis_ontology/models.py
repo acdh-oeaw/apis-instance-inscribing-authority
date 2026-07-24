@@ -63,9 +63,16 @@ class PersonMixin(models.Model):
 
     # can account for the origin [of the Person himself or his ancestors] or the profession;
     # attribute of relation Person/Place or Person/Monument//Object//Inscription
-    person_title = models.TextField(
-        blank=True, null=True, help_text="one title per line"
+    person_title = models.CharField(
+        max_length=255, blank=True, null=True, help_text="Title"
     )
+    honorifics = models.TextField(
+        blank=True,
+        null=True,
+        help_text="one title per line",
+        verbose_name="Honorifics (laqab)",
+    )
+
     kunya = models.CharField(
         max_length=255, blank=True, null=True, help_text="Teknonym"
     )
@@ -316,7 +323,14 @@ class Person(E21_Person, PersonMixin, IABaseModel):
     def __str__(self):
         if self.preferred_name:
             return self.preferred_name
-        parts = [self.person_title, self.kunya, self.ism, self.nasab, self.nisba]
+        parts = [
+            self.person_title,
+            self.honorifics,
+            self.kunya,
+            self.ism,
+            self.nasab,
+            self.nisba,
+        ]
         return " ".join([part for part in parts if part])
 
     class Meta(E21_Person.Meta, IABaseModel.Meta):
