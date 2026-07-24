@@ -17,10 +17,13 @@ from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django_interval.fields import FuzzyDateParserField
 
+from apis_ontology.rdfconfigs.monument import MonumentFromWikidata
+
 from .date_utils import nomansland_dateparser
 from auditlog.registry import auditlog
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
+from apis_core.utils.rdf import load_uri_using_path
 
 
 logger = logging.getLogger(__name__)
@@ -149,6 +152,12 @@ class Monument(IABaseModel, PreservationStateMixin):
     name = models.CharField(max_length=255, blank=True, null=True)
     monument_type = models.ManyToManyField(MonumentType, blank=True)
     alternative_names = models.TextField(blank=True, null=True)
+
+    import_definitions = {
+        "http://www.wikidata.org/*": lambda x: load_uri_using_path(
+            x, MonumentFromWikidata
+        ),
+    }
 
     @cached_property
     def location(self):
