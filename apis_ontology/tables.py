@@ -57,6 +57,11 @@ class PersonTable(IABaseModelTable):
         fields = ("desc", "dynasty", "person_role")
 
 
+class InscriptionTable(IABaseModelTable):
+    class Meta(IABaseModelTable.Meta):
+        fields = ("desc", "text_classification")
+
+
 class MonumentTable(IABaseModelTable):
     class Meta(IABaseModelTable.Meta):
         fields = ("desc", "monument_type")
