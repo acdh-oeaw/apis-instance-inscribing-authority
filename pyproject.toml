@@ -14,7 +14,7 @@ dependencies = [
     "django-interval>=0.5.1",
     "apis-bibsonomy==0.15.3",
     "apis-highlighter-ng>=0.6.3",
-    "django-tables2==2.8",
+    "django-tables2==3.0.1",
     "apis-datamodel==0.1.0",
     "django-cosmograph>=0.4.0",
 ]
