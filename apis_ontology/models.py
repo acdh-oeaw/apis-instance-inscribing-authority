@@ -37,6 +37,21 @@ class IADateMixin(models.Model):
     end = FuzzyDateParserField(parser=nomansland_dateparser, null=True, blank=True)
 
 
+class DimensionsMixin(models.Model):
+    dimensions_length = models.CharField(
+        max_length=255, blank=True, null=True, help_text="in cm", verbose_name="Length"
+    )
+    dimensions_breadth = models.CharField(
+        max_length=255, blank=True, null=True, help_text="in cm", verbose_name="Breadth"
+    )
+    dimensions_height = models.CharField(
+        max_length=255, blank=True, null=True, help_text="in cm", verbose_name="Height"
+    )
+
+    class Meta:
+        abstract = True
+
+
 class VocabularyBaseModel(SimpleLabelModel):
     class Meta(SimpleLabelModel.Meta):
         abstract = True
@@ -183,7 +198,7 @@ class Monument(IABaseModel, PreservationStateMixin):
         return self.name
 
 
-class Object(IABaseModel, PreservationStateMixin):
+class Object(IABaseModel, PreservationStateMixin, DimensionsMixin):
     object_type = models.ForeignKey(
         ObjectType, on_delete=models.SET_NULL, blank=True, null=True
     )
@@ -191,15 +206,6 @@ class Object(IABaseModel, PreservationStateMixin):
     find_spot = models.TextField(blank=True, null=True)
     current_position = models.TextField(blank=True, null=True)
     material = models.ManyToManyField(Material, blank=True)
-    dimensions_length = models.CharField(
-        max_length=255, blank=True, null=True, help_text="in cm"
-    )
-    dimensions_breadth = models.CharField(
-        max_length=255, blank=True, null=True, help_text="in cm"
-    )
-    dimensions_height = models.CharField(
-        max_length=255, blank=True, null=True, help_text="in cm"
-    )
 
     @cached_property
     def monument(self):
@@ -216,7 +222,7 @@ class Object(IABaseModel, PreservationStateMixin):
         return f"{prefix}{super().__str__()}"
 
 
-class Inscription(IABaseModel, PreservationStateMixin):
+class Inscription(IABaseModel, PreservationStateMixin, DimensionsMixin):
     writing_field = models.TextField(blank=True, null=True)
     reference_tei = models.CharField(
         max_length=255,
@@ -227,15 +233,6 @@ class Inscription(IABaseModel, PreservationStateMixin):
     distribution = models.TextField(blank=True, null=True)
     material = models.ManyToManyField(Material, blank=True)
     technique = models.ManyToManyField(Technique, blank=True)
-    dimensions_length = models.CharField(
-        max_length=255, blank=True, null=True, help_text="in cm"
-    )
-    dimensions_breadth = models.CharField(
-        max_length=255, blank=True, null=True, help_text="in cm"
-    )
-    dimensions_height = models.CharField(
-        max_length=255, blank=True, null=True, help_text="in cm"
-    )
     remarks_on_material_and_technique = models.TextField(blank=True, null=True)
     style = models.ManyToManyField(Style, blank=True)
     diacritics = models.ManyToManyField(Diacritics, blank=True)
