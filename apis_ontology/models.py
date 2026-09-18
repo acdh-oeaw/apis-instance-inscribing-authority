@@ -187,6 +187,7 @@ class Object(IABaseModel, PreservationStateMixin):
     object_type = models.ForeignKey(
         ObjectType, on_delete=models.SET_NULL, blank=True, null=True
     )
+    original_position = models.TextField(blank=True, null=True)
     find_spot = models.TextField(blank=True, null=True)
     current_position = models.TextField(blank=True, null=True)
     material = models.ManyToManyField(Material, blank=True)
