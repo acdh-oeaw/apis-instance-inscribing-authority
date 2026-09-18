@@ -1,0 +1,73 @@
+{% extends "apis_ontology/partials/iabasemodel_card_table.html" %}
+{% load generic %}
+{% block details %}
+<table class="table table-hover">
+    <tr>
+        <th>ID</th>
+        <td>{{ object.pk }}</td>
+    </tr>
+    <tr>
+        <th>Object type</th>
+        <td>
+            {{ object.object_type }}
+        </td>
+    </tr>
+    <tr>
+        <th>Original position</th>
+        <td>
+            {{ object.original_position }}
+        </td>
+    </tr>
+    <tr>
+        <th>Find spot</th>
+        <td>
+            {{ object.find_spot }}
+        </td>
+        </tr>
+        <tr>
+            <th>Current position</th>
+            <td>
+                {{ object.current_position }}
+            </td>
+            </tr>
+            <tr>
+                <th>Material</th>
+                <td>
+                    {% for sub in object.material.all %}
+                    {{ sub.label }}<br />
+                    {% endfor %}
+                </td>
+            </tr>
+            
+            <tr>
+        <th>Dimensions (L x B x H)</th>
+        <td>
+            {% if object.dimensions_length %}
+            {{ object.dimensions_length }} cm
+            {% else %}
+            ?
+            {% endif %}
+            x
+            {% if object.dimensions_breadth %}
+            {{ object.dimensions_breadth }} cm
+            {% else %}
+            ?
+            {% endif %}
+            x
+            {% if object.dimensions_height %}
+            {{ object.dimensions_height }} cm
+            {% else %}
+            ?
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <th>State of preservation</th>
+        <td>{{ object.preservation_state|linebreaksbr }}</td>
+    </tr>
+    <tr>
+        <th>Remarks on state of preservation</th>
+        <td>{{ object.remarks_on_preservation |linebreaksbr }}</td>
+    </tr>
+</table>
+{% endblock details %}
