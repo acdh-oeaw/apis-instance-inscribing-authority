@@ -245,6 +245,9 @@ class Inscription(IABaseModel, PreservationStateMixin):
     text_original = models.TextField(blank=True, null=True)
     text_transliteration = models.TextField(blank=True, null=True)
     text_translation = models.TextField(blank=True, null=True)
+    reading_author = models.TextField(
+        blank=True, null=True, verbose_name=_("reading author")
+    )
     remarks = models.TextField(blank=True, null=True, verbose_name="remarks on text")
     date = FuzzyDateParserField(parser=nomansland_dateparser, null=True, blank=True)
     remarks_on_date = models.TextField(blank=True, null=True)

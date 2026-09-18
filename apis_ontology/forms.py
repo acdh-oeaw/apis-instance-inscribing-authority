@@ -23,6 +23,7 @@ class InscriptionForm(GenericModelForm):
         "text_original",
         "text_transliteration",
         "text_translation",
+        "reading_author",
         "remarks",
         "date",
         "remarks_on_date",
