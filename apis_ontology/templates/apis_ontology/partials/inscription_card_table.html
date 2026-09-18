@@ -76,7 +76,7 @@
     </tr>
     <tr>
         <th>Ornaments</th>
-        <td>{% for s in object.ornaments.all %}{{ s }}{% if not forloop.last %}, {% endif %}{% empty %}-{% endfor %}
+        <td>{{ object.ornaments |linebreaksbr }}
         </td>
     </tr>
     <tr>
