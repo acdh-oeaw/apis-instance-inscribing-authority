@@ -957,6 +957,32 @@ class ObjectFoundInMonument(IARelationMixin):
         return "monument contains object"
 
 
+class ObjectRelatedToPlace(IARelationMixin):
+    subj_model = Object
+    obj_model = Place
+
+    @classmethod
+    def name(cls) -> str:
+        return "object related to place"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "place related to object"
+
+
+class ObjectRelatedToMonument(IARelationMixin):
+    subj_model = Object
+    obj_model = Monument
+
+    @classmethod
+    def name(cls) -> str:
+        return "object related to monument"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "monument related to object"
+
+
 auditlog.register(MonumentType)
 auditlog.register(Material)
 auditlog.register(ObjectType)
@@ -1008,3 +1034,6 @@ auditlog.register(ObjectReusedInPlace)
 auditlog.register(ObjectReusedInMonument)
 auditlog.register(ObjectReusedInObject)
 auditlog.register(ObjectPartOfObject)
+auditlog.register(ObjectFoundInMonument)
+auditlog.register(ObjectRelatedToPlace)
+auditlog.register(ObjectRelatedToMonument)
