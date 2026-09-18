@@ -1,7 +1,42 @@
 from apis_core.generic.forms import GenericModelForm
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Row, Column
+
+from crispy_forms.layout import Column, Row, Layout
 
 
-class InscriptionForm(GenericModelForm):
+class DimensionsMixin:
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        dimensions = {
+            "dimensions_length",
+            "dimensions_breadth",
+            "dimensions_height",
+        }
+
+        layout = []
+        dimensions_added = False
+
+        for name in self.fields:
+            if name in dimensions:
+                if not dimensions_added:
+                    layout.append(
+                        Row(
+                            Column("dimensions_length"),
+                            Column("dimensions_breadth"),
+                            Column("dimensions_height"),
+                        )
+                    )
+                    dimensions_added = True
+                continue
+
+            layout.append(name)
+
+        self.helper.layout = Layout(*layout)
+
+
+class InscriptionForm(DimensionsMixin, GenericModelForm):
 
     field_order = [
         "material",
@@ -47,4 +82,19 @@ class PersonForm(GenericModelForm):
         "nasab",
         "nisba",
         "relation to caliph",
+    ]
+
+
+class ObjectForm(DimensionsMixin, GenericModelForm):
+    field_order = [
+        "object_type",
+        "original_position",
+        "find_spot",
+        "current_position",
+        "material",
+        "dimensions_length",
+        "dimensions_breadth",
+        "dimensions_height",
+        "perservation_state",
+        "remarks_on_preservation",
     ]
