@@ -4,12 +4,13 @@ from apis_core.relations.tables import RelationsListTable
 
 
 class IABaseModelTable(GenericTable):
+    pk = tables.Column(accessor="pk", verbose_name="ID", orderable=True)
+
     class Meta(GenericTable.Meta):
         attrs = {
             "td": {"dir": "auto"},
         }
-        exclude = ("id",)
-        sequence = ("...", "actions")
+        sequence = ("pk", "...", "actions")
 
 
 class IABaseModelRelationsTable(RelationsListTable):
