@@ -1,4 +1,6 @@
 import django_tables2 as tables
+from django.utils.safestring import mark_safe
+
 from apis_core.generic.tables import GenericTable
 from apis_core.relations.tables import RelationsListTable
 
@@ -10,6 +12,11 @@ class IABaseModelTable(GenericTable):
         }
         exclude = ("id",)
         sequence = ("...", "actions")
+
+
+class VocabularyBaseModelTable(GenericTable):
+    def render_label(self, record):
+        return mark_safe(record.label) if record.label else "-"
 
 
 class IABaseModelRelationsTable(RelationsListTable):
