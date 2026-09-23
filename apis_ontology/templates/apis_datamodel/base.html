@@ -1,18 +1,21 @@
 {% extends "../base.html" %}
 {%block styles %}
 {{ block.super }}
-    <style>
-        td:hover {
-            background: #fff7d6;
-        }
-     td, th{
-            text-align: center;
-            vertical-align: middle;
-            border-bottom: solid 1px #eee;
-            padding: 1em;
-            min-width: 12em;
-     }
-    
-    </style>
+<style>
+    td:hover {
+        background: #fff7d6;
+    }
+
+    td,
+    th {
+        text-align: center;
+        vertical-align: middle;
+        border-bottom: solid 1px #eee;
+        padding: 1em;
+        min-width: 12em;
+    }
+</style>
 {% endblock styles %}
 
+{% block introduction %}
+{% endblock introduction %}

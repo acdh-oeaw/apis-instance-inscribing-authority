@@ -1,5 +1,4 @@
 {% extends parent_template|default:"django_cosmograph/base.html" %}
-
 {% block dc_content %}
 <div class="container-fluid py-2">
     <form method="get" class="row g-2 align-items-center justify-content-center mb-2">
@@ -34,3 +33,6 @@
 
 {% include "django_cosmograph/cosmograph_partial.html" %}
 {% endblock dc_content %}
+
+{% block introduction %}
+{% endblock introduction %}

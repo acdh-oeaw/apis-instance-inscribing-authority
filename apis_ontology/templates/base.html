@@ -26,19 +26,21 @@ Inscribing Authority
     </div>
 
 </li>
-        {{ block.super }}
-        <li class="nav-item">
-            <a class="nav-link" href="{% url 'graph_view' %}">Network</a>
-        </li>
+{{ block.super }}
+<li class="nav-item">
+    <a class="nav-link" href="{% url 'graph_view' %}">Network</a>
+</li>
 {% endblock main-menu %}
 
 {% block content %}
+{% block introduction %}
+{% include "apis_ontology/splash.html" %}
+{% endblock introduction %}
 <div class="mx-auto px-4">
-{% block dm_content %}
-{% endblock dm_content %}
+    {% block dm_content %}
+    {% endblock dm_content %}
 </div>
 {% block dc_content %}
 {% endblock dc_content %}
 
 {% endblock content%}
-
