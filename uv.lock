@@ -172,7 +172,7 @@ requires-dist = [
     { name = "django-cosmograph", specifier = ">=0.4.0" },
     { name = "django-interval", specifier = ">=0.5.1" },
     { name = "django-tables2", specifier = "==2.8" },
-    { name = "psycopg", extras = ["binary"], specifier = ">=3.2" },
+    { name = "psycopg", extras = ["binary"], specifier = "~=3.2" },
 ]
 
 [[package]]
