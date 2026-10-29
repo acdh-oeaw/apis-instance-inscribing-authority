@@ -1,4 +1,5 @@
 import django_tables2 as tables
+from django.template.defaultfilters import linebreaksbr
 from django.utils.safestring import mark_safe
 
 from apis_core.generic.tables import GenericTable
@@ -30,9 +31,37 @@ class IABaseModelRelationsTable(RelationsListTable):
         orderable = False
 
 
-class InscriptionPersonRelationsTable(IABaseModelRelationsTable):
+class FoundInRelationsTable(IABaseModelRelationsTable):
     class Meta(IABaseModelRelationsTable.Meta):
-        sequence = ("...", "introduction", "full_name", "benediction", "actions")
+        sequence = ("...", "position", "actions")
+
+    position = tables.Column(accessor="position")
+
+
+class ReferenceRelationsTable(IABaseModelRelationsTable):
+    class Meta(IABaseModelRelationsTable.Meta):
+        sequence = ("...", "reference", "actions")
+
+    reference = tables.Column(accessor="reference")
+
+    def render_reference(self, value, record):
+        return mark_safe(linebreaksbr(record.reference)) if record.reference else "-"
+
+
+class PersonRelationsTable(
+    ReferenceRelationsTable,
+    IABaseModelRelationsTable,
+):
+    class Meta(IABaseModelRelationsTable.Meta):
+        sequence = (
+            "...",
+            "person_role",
+            "introduction",
+            "full_name",
+            "benediction",
+            "reference",
+            "actions",
+        )
 
     person_role = tables.Column(accessor="person_role")
     full_name = tables.Column(verbose_name="Full Name", empty_values=())
@@ -56,8 +85,83 @@ class InscriptionPersonRelationsTable(IABaseModelRelationsTable):
         return " ".join([part for part in parts if part])
 
 
-class PersonInscriptionRelationsTable(InscriptionPersonRelationsTable):
-    class Meta(InscriptionPersonRelationsTable.Meta):
+class InscriptionPersonRelationsTable(PersonRelationsTable):
+    class Meta(PersonRelationsTable.Meta):
+        pass
+
+
+class PersonInscriptionRelationsTable(PersonRelationsTable):
+    class Meta(PersonRelationsTable.Meta):
+        pass
+
+
+class PersonObjectRelationsTable(PersonRelationsTable):
+    class Meta(PersonRelationsTable.Meta):
+        sequence = ("...", "person_role", "reference", "actions")
+        exclude = ("introduction", "full_name", "benediction")
+
+
+class ObjectPersonRelationsTable(PersonRelationsTable):
+    class Meta(PersonRelationsTable.Meta):
+        sequence = ("...", "person_role", "reference", "actions")
+        exclude = ("introduction", "full_name", "benediction")
+
+
+class MonumentPersonRelationsTable(PersonRelationsTable):
+    class Meta(PersonRelationsTable.Meta):
+        pass
+
+
+class PersonMonumentRelationsTable(PersonRelationsTable):
+    class Meta(PersonRelationsTable.Meta):
+        pass
+
+
+class InscriptionMonumentRelationsTable(FoundInRelationsTable):
+    class Meta(FoundInRelationsTable.Meta):
+        pass
+
+
+class MonumentInscriptionRelationsTable(FoundInRelationsTable):
+    class Meta(FoundInRelationsTable.Meta):
+        pass
+
+
+class InscriptionObjectRelationsTable(FoundInRelationsTable):
+    class Meta(FoundInRelationsTable.Meta):
+        pass
+
+    text_classification = tables.Column(
+        accessor="text_classification", verbose_name="Text Classification"
+    )
+
+
+class ObjectInscriptionRelationsTable(FoundInRelationsTable):
+    class Meta(FoundInRelationsTable.Meta):
+        pass
+
+    text_classification = tables.Column(
+        accessor="text_classification", verbose_name="Text Classification"
+    )
+
+
+class ObjectMonumentRelationsTable(FoundInRelationsTable):
+    class Meta(FoundInRelationsTable.Meta):
+        pass
+
+
+class MonumentObjectRelationsTable(FoundInRelationsTable):
+    class Meta(FoundInRelationsTable.Meta):
+        pass
+
+
+class InscriptionWorkRelationsTable(ReferenceRelationsTable):
+    class Meta(ReferenceRelationsTable.Meta):
+        pass
+
+
+class WorkInscriptionRelationsTable(ReferenceRelationsTable):
+    class Meta(ReferenceRelationsTable.Meta):
         pass
 
 
