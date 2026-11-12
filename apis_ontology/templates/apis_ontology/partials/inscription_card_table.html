@@ -132,10 +132,17 @@
     <tr>
         <th>Thesaurus d'Epigraphie Islamique ID</th>
         <td>
-            <a target="_blank" href='https://www.epigraphie-islamique.uliege.be/thesaurus/User/EpigraphyDisplay.aspx?id={{ object.reference_tei}}&pan=1&st={{ object.reference_tei }}&sc=1'>
-                        {{ object.reference_tei }}
+            <a target="_blank"
+                href='https://www.epigraphie-islamique.uliege.be/thesaurus/User/EpigraphyDisplay.aspx?id={{ object.reference_tei}}&pan=1&st={{ object.reference_tei }}&sc=1'>
+                {{ object.reference_tei }}
             </a>
-        </td>
-        </tr>
-        </table>
+            </td>
+            </tr>
+            {% block uris %}
+            {{ block.super }}
+            {%endblock uris %}
+            
+            </table>
+
 {% endblock details %}
+

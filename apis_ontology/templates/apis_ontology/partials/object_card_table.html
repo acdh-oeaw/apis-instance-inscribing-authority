@@ -68,6 +68,9 @@
     <tr>
         <th>Remarks on state of preservation</th>
         <td>{{ object.remarks_on_preservation |linebreaksbr }}</td>
-    </tr>
-</table>
+        </tr>
+        {% block uris %}
+        {{ block.super }}
+        {%endblock uris %}        
+        </table>
 {% endblock details %}
