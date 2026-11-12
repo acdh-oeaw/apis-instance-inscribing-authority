@@ -1,4 +1,5 @@
 {% load generic %}
+{% load uris %}
 {% load references %}
 {% autoescape off %}
 {% block details %}
@@ -8,6 +9,14 @@
     {% model_field_template_lookup_list object key "table_row" as template_list %}
     {% include template_list %}
     {% endfor %}
+    {% block uris %}
+    {% if uris or object.Config.enable_uris %}
+    <tr>
+        <th>Uris</th>
+        <td>{% list_uris_on_object object editable=True %}</td>
+    </tr>
+    {% endif %}
+    {% endblock uris %}
 </table>
 {% endblock details %}
 {% endautoescape %}

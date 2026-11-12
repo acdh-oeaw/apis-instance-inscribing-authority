@@ -87,14 +87,14 @@ wheels = [
 
 [[package]]
 name = "apis-advanced-search"
-version = "0.0.5"
+version = "0.0.6"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "apis-core-rdf" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/00/df/67403ac89c5a26447c41c8d36aa6cb6de5deee527bc5cb9b47ebf3691be9/apis_advanced_search-0.0.5.tar.gz", hash = "sha256:b0becf7a8415e9ae644448059690cbb19cf0863729b50a213492d6699405277e", size = 92841, upload-time = "2026-11-12T02:02:22.106Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/b9/02/622c90d3598ec1a85153cbd7650a343dbbd8e57ef3734398b68fa7d5db7e/apis_advanced_search-0.0.6.tar.gz", hash = "sha256:11e636ad45b80e664ec3e52b6d349869624d2567bcce89872d14296a06d1b555", size = 92877, upload-time = "2026-11-12T07:40:16.957Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/38/c4/48c04f6b6d706ea75171c77bbbcac22c218877ccaae677e49da1146cbe60/apis_advanced_search-0.0.5-py3-none-any.whl", hash = "sha256:63d2eeed3ff2d90ec82868e5ee95f633d503af95c7248c1a740db22b549727d5", size = 34767, upload-time = "2026-11-12T02:02:20.858Z" },
+    { url = "https://files.pythonhosted.org/packages/72/38/f97c86f1336912e05a293bd191a58e089c8ae7ca299efd77c8cb3cec85fe/apis_advanced_search-0.0.6-py3-none-any.whl", hash = "sha256:6b62d5f42773e581e31164cc49fdf412a3107a5c60c02e52ddf3f2d2fdfb3986", size = 34807, upload-time = "2026-11-12T07:40:15.519Z" },
 ]
 
 [[package]]
@@ -114,7 +114,7 @@ wheels = [
 
 [[package]]
 name = "apis-core-rdf"
-version = "0.68.1"
+version = "0.74.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "acdh-arche-assets" },
@@ -136,9 +136,9 @@ dependencies = [
     { name = "rdflib" },
     { name = "tablib" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/e3/c8/3d257eaa3e7f9c701335719039fb975c7b1cf8ff0d973967d260b6dec3ca/apis_core_rdf-0.68.1.tar.gz", hash = "sha256:62f8b42d7e7023e6e25f2e780608b69c02fc1260364a8bc0547bcc2c62e63f92", size = 347220, upload-time = "2026-09-09T07:22:44.663Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/7a/e4/64e7982bded3dc8bc283dad882c0e13cd3965df063a105f43952a02779f7/apis_core_rdf-0.74.0.tar.gz", hash = "sha256:3d22f18308dfcee300d735ad58ce5104fefa709d8a0bea1be2933a066f47f827", size = 385786, upload-time = "2026-11-10T16:05:59.898Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/88/e8/5c20095ab9472a4f999583169715917bad0f440797bb5971c6e0913e9195/apis_core_rdf-0.68.1-py3-none-any.whl", hash = "sha256:9b3591bd902360181c326c6ec3972db254da895e3095468040203deb125d912b", size = 314897, upload-time = "2026-09-09T07:22:42.99Z" },
+    { url = "https://files.pythonhosted.org/packages/0e/7c/b051c4191c7b8ad1edd6f91b26a8beec69908d3c5b79f6ae1d008084f72d/apis_core_rdf-0.74.0-py3-none-any.whl", hash = "sha256:bb9d7dc7e85d3fa996b97de6ebdb8f8e55ff1e1edc64923602e29734ab0c681b", size = 330370, upload-time = "2026-11-10T16:05:58.084Z" },
 ]
 
 [[package]]
@@ -186,9 +186,9 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "apis-acdhch-default-settings", specifier = "==2.23.0" },
-    { name = "apis-advanced-search", specifier = ">=0.0.5" },
+    { name = "apis-advanced-search", specifier = ">=0.0.6" },
     { name = "apis-bibsonomy", specifier = "==0.15.3" },
-    { name = "apis-core-rdf", specifier = "==0.68.1" },
+    { name = "apis-core-rdf", specifier = "==0.74.0" },
     { name = "apis-datamodel", specifier = "==0.1.0" },
     { name = "apis-highlighter-ng", specifier = ">=0.7.0" },
     { name = "django-cosmograph", specifier = ">=0.4.0" },

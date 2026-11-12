@@ -29,14 +29,17 @@
     <tr>
         <th>Gender</th>
         <td>{{ object.get_gender_display|default_if_none:"-" }}</td>
-    </tr>
-    {% modeldict object as d %}
-    {% for key, value in d.items %}
-    
-        {% if key.name != "id" and key.name != "pk" and key.name != "preferred_name" and key.name != "person_role" and key.name != "active_years_start" and key.name != "active_years_end" and key.name != "dynasty" and key.name != "gender" and key.name != "person_title" and key.name != "kunya" and key.name != "ism" and key.name != "nasab" and key.name != "nisba" and key.name != "relation_to_caliph" %}
-            {% model_field_template_lookup_list object key "table_row" as template_list %}
-            {% include template_list %}
-        {% endif %}
-    {% endfor %}
-</table>
+        </tr>
+	{% modeldict object as d %}
+	{% for key, value in d.items %}
+	    {% if key.name != "id" and key.name != "pk" and key.name != "preferred_name" and key.name != "person_role" and key.name != "active_years_start" and key.name != "active_years_end" and key.name != "dynasty" and key.name != "gender" and key.name != "person_title" and key.name != "kunya" and key.name != "ism" and key.name != "nasab" and key.name != "nisba" and key.name != "relation_to_caliph" %}
+		{% model_field_template_lookup_list object key "table_row" as template_list %}
+		{% include template_list %}
+	    {% endif %}
+	{% endfor %}        
+        {% block uris %}
+        {{ block.super }}
+        {%endblock uris %}
+        
+        </table>
 {% endblock details %}
