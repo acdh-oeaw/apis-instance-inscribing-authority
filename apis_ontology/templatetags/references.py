@@ -2,13 +2,18 @@ import logging
 from django import template
 from apis_bibsonomy.models import Reference
 import json
+from django.contrib.contenttypes.models import ContentType
 
 register = template.Library()
 
 
 @register.filter
-def get_references(content_type, object_id):
-    refs_qs = Reference.objects.filter(content_type=content_type, object_id=object_id)
+def get_references(object):
+    content_type = ContentType.objects.get_for_model(object)
+    print("Content Type:", content_type)
+    refs_qs = Reference.objects.filter(
+        content_type=content_type, object_id=object.pk
+    ).order_by("id")
     formatted_refs = []
 
     for ref in refs_qs:

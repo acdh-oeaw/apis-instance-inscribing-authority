@@ -11,6 +11,7 @@ ADDITIONAL_APPS = [
     "apis_bibsonomy",
     "apis_datamodel",
     "django_cosmograph",
+    "apis_advanced_search",
 ]
 for app in ADDITIONAL_APPS:
     if app not in INSTALLED_APPS:
