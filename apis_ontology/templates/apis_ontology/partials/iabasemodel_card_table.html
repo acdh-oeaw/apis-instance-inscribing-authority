@@ -11,8 +11,9 @@
 </table>
 {% endblock details %}
 {% endautoescape %}
+
 {% block references %}
-{% with refs=object.content_type.id|get_references:object.pk %}
+{% with refs=object|get_references %}
     {% if refs %}
         <div id="referenceon{{ object.content_type.id }}_{{ object.pk }}dlg">
                 References:
