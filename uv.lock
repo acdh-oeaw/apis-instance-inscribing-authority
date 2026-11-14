@@ -87,14 +87,14 @@ wheels = [
 
 [[package]]
 name = "apis-advanced-search"
-version = "0.0.6"
+version = "0.0.10"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "apis-core-rdf" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/b9/02/622c90d3598ec1a85153cbd7650a343dbbd8e57ef3734398b68fa7d5db7e/apis_advanced_search-0.0.6.tar.gz", hash = "sha256:11e636ad45b80e664ec3e52b6d349869624d2567bcce89872d14296a06d1b555", size = 92877, upload-time = "2026-11-12T07:40:16.957Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/7a/59/0f55bd7945986dcbdaef771d7b5c4bab4df6b7d26559918e5d09625e91ba/apis_advanced_search-0.0.10.tar.gz", hash = "sha256:e28bcf4a3ac08005c84bb797dddd7c225d7221c3e202266dd1aaae5d278fa8bf", size = 107888, upload-time = "2026-11-15T11:45:38.426Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/72/38/f97c86f1336912e05a293bd191a58e089c8ae7ca299efd77c8cb3cec85fe/apis_advanced_search-0.0.6-py3-none-any.whl", hash = "sha256:6b62d5f42773e581e31164cc49fdf412a3107a5c60c02e52ddf3f2d2fdfb3986", size = 34807, upload-time = "2026-11-12T07:40:15.519Z" },
+    { url = "https://files.pythonhosted.org/packages/65/d9/907ce5a1d51e2b164c7223dd8d9ff572d3d7f0fe6f300ff2bf22b63a36df/apis_advanced_search-0.0.10-py3-none-any.whl", hash = "sha256:e0be2e622d9ee894b0d5f00e13e148f681a3856cb3ae648afd1b1181f58b35a1", size = 53264, upload-time = "2026-11-15T11:45:37.168Z" },
 ]
 
 [[package]]
@@ -186,7 +186,7 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "apis-acdhch-default-settings", specifier = "==2.23.0" },
-    { name = "apis-advanced-search", specifier = ">=0.0.6" },
+    { name = "apis-advanced-search", specifier = ">=0.0.10" },
     { name = "apis-bibsonomy", specifier = "==0.15.3" },
     { name = "apis-core-rdf", specifier = "==0.74.0" },
     { name = "apis-datamodel", specifier = "==0.1.0" },
